@@ -7,5 +7,5 @@
 | Albert| albertjregay-cell | | | | |
 | Kyfer| cainoykyfer-cyber | | | | |
 | Divine | Deificab | | | | |
-| Michael | mchael234 | | | | |
+| Michael | mchael234 | violations, alerts, audit_logs | | | |
 | Dave | dmcordova-svg | | | | |
