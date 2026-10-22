@@ -4,8 +4,8 @@
 | Member | GitHub username | Tables | Endpoints / screens | Join report(s) and type | Feature role |
 |---|---|---|---|---|---|
 | Kenn | dunk3nn | | | | |
-| | albertjregay-cell | | | | |
-| | cainoykyfer-cyber | | | | |
-| | Deificab | | | | |
-| | mchael234 | | | | |
+| Albert| albertjregay-cell | | | | |
+| Kyfer| cainoykyfer-cyber | | | | |
+| Divine | Deificab | | | | |
+| Michael | mchael234 | | | | |
 | Dave | dmcordova-svg | | | | |
