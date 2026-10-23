@@ -1,0 +1,32 @@
+CREATE TABLE travelers (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    contact_number VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE vehicles (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    traveler_id INT NOT NULL,
+    vehicle_name VARCHAR(255) NOT NULL,
+    plate_number VARCHAR(20) NOT NULL,
+    capacity INT NOT NULL,
+
+    FOREIGN KEY (traveler_id)
+        REFERENCES travelers(id)
+);
+
+CREATE TABLE entry_records (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    traveler_id INT NOT NULL,
+    vehicle_id INT NOT NULL,
+    entry_date DATE NOT NULL,
+    entry_time TIME NOT NULL,
+    purpose VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (traveler_id)
+        REFERENCES travelers(id),
+
+    FOREIGN KEY (vehicle_id)
+        REFERENCES vehicles(id)
+); 
