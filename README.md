@@ -8,4 +8,4 @@
 | Kyfer| cainoykyfer-cyber | | | | |
 | Divine | Deificab | | | | |
 | Michael | mchael234 | | | | |
-| Dave | dmcordova-svg | | | | |
+| Dave | dmcordova-svg | personnel, shifts, checkpoint_assignments | Personnel Management, Shift Management, Checkpoint Assignment Management | Personnel + Shifts + Border Stations (INNER JOIN) | Personnel and Shift Assignment Management |
