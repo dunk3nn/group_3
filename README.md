@@ -6,6 +6,6 @@
 | Kenn | dunk3nn | | | | |
 | Albert| albertjregay-cell | | | | |
 | Kyfer| cainoykyfer-cyber | | | | |
-| Divine | Deificab | | | | |
+| Divine | Deificab | travel,vechiles,entry_types| | | |
 | Michael | mchael234 | violations, alerts, audit_logs | | | |
 | Dave | dmcordova-svg | | | | |
