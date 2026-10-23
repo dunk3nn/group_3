@@ -6,6 +6,6 @@
 | Kenn | dunk3nn | fee_rules, penalties, payments | Fee rules and payments screen | Entries with no payment (LEFT) | Unique feature: fee calculation and overstay penalties |
 | Albert| albertjregay-cell | | | | |
 | Kyfer| cainoykyfer-cyber | | | | |
-| Divine | Deificab | | | | |
+| Divine | Deificab | travel,vechiles,entry_types| | | |
 | Michael | mchael234 | violations, alerts, audit_logs | | | |
 | Dave | dmcordova-svg | | | | |
