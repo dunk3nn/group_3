@@ -2,7 +2,8 @@
 | ------- | ----------------- | ----------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------ |
 | Kenn    | dunk3nn           | fee_rules, penalties, payments            | Fee rules and payments screen                                            | Entries with no payment (LEFT JOIN)               | Unique feature: fee calculation and overstay penalties |
 | Albert  | albertjregay-cell |                                           |                                                                          |                                                   |                                                        |
-| Kyfer   | cainoykyfer-cyber |                                           |                                                                          |                                                   |                                                        |
+| Kyfer   | cainoykyfer-cyber |  checkpoints,lanes, vehicle_type | Checkpoint, Lane , Vehicle Type Screens | Lanes with their checkpoint(INNER JOIN) | Master Data |
+
 | Divine  | Deificab          | travel, vehicles, entry_types             |                                                                          |                                                   |                                                        |
 | Michael | mchael234 | violations, alerts, audit_logs | Violations, Alerts, and Audit log screens | Violations with their entry (LEFT JOIN) | Unique features: violation workflow, alerts, audit trail |
 | Dave    | dmcordova-svg     | personnel, shifts, checkpoint_assignments | Personnel Management, Shift Management, Checkpoint Assignment Management | Personnel + Shifts + Border Stations (INNER JOIN) | Personnel and Shift Assignment Management              |
