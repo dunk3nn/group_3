@@ -1,14 +1,8 @@
--- =========================================
--- DAVE'S DATABASE TABLES
--- [Personnel and Checkpoint Assignment]
-
--- 1. Departments
 CREATE TABLE Departments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     department_name VARCHAR(100) NOT NULL
 );
 
--- 2. Personnel
 CREATE TABLE Personnel (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -20,7 +14,6 @@ CREATE TABLE Personnel (
         REFERENCES Departments(id)
 );
 
--- 3. Shifts
 CREATE TABLE Shifts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     shift_name VARCHAR(50) NOT NULL,
@@ -28,9 +21,6 @@ CREATE TABLE Shifts (
     end_time TIME NOT NULL
 );
 
--- 4. Checkpoint Assignments
--- Uses Kyfer's shared Checkpoints table.
--- Make sure Kyfer's Checkpoints table exists first.
 
 CREATE TABLE Checkpoint_Assignments (
     id INT AUTO_INCREMENT PRIMARY KEY,
