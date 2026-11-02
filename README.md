@@ -1,6 +1,6 @@
 | Member  | GitHub username   | Tables                                    | Endpoints / screens                                                      | Join report(s) and type                           | Feature role                                           |
 | ------- | ----------------- | ----------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------------ |
-| Kenn    | dunk3nn           | fee_rules, penalties, payments            | Fee rules and payments screen                                            | Entries with no payment (LEFT JOIN)               | Unique feature: fee calculation and overstay penalties |
+| Kenn | dunk3nn | fee_rules, penalties, payments | Fee rules and payments screen | Entries with no payment (LEFT JOIN); Penalties vs payments (FULL OUTER JOIN via UNION of LEFT and RIGHT) | Unique feature: fee calculation and overstay penalties. Complete resource: payments |
 | Albert | albertiregay-cell | users, roles | Login screen, User management screen | Users with their roles (INNER JOIN) | Core: login, roles, user management |
 | Kyfer | cainoykyfer-cyber | checkpoints, lanes, vehicle_types | Checkpoint, Lane, and Vehicle type screens | Lanes with their checkpoint (INNER JOIN) | Master data |
 | Divine | Deificab | travelers, vehicles, entry_records | Entry logging screen | Entries with traveler, vehicle, checkpoint (INNER JOIN) | Transactions: entry records |
