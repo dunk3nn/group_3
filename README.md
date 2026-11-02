@@ -3,6 +3,6 @@
 | Kenn    | dunk3nn           | fee_rules, penalties, payments            | Fee rules and payments screen                                            | Entries with no payment (LEFT JOIN)               | Unique feature: fee calculation and overstay penalties |
 | Albert | albertiregay-cell | users, roles | Login screen, User management screen | Users with their roles (INNER JOIN) | Core: login, roles, user management |
 | Kyfer | cainoykyfer-cyber | checkpoints, lanes, vehicle_types | Checkpoint, Lane, and Vehicle type screens | Lanes with their checkpoint (INNER JOIN) | Master data |
-| Divine | Deificab | travelers, vehicles, entry_records | Entry logging screen | Entries with traveler, vehicle, checkpoint (INNER JOIN) | Transactions: entry records |
+| Divine | Deificab | travelers, vehicles, entry_records |  Traveler Management, Vehicle Management, Entry Records | Entries with traveler, vehicle, checkpoint (INNER JOIN) | Transactions: entry records |
 | Michael | mchael234 | violations, alerts, audit_logs | Violations, Alerts, and Audit log screens | Violations with their entry (LEFT JOIN) | Unique features: violation workflow, alerts, audit trail |
 | Dave    | dmcordova-svg     | personnel, shifts, checkpoint_assignments | Personnel Management, Shift Management, Checkpoint Assignment Management | Personnel + Shifts + Border Stations (INNER JOIN) | Personnel and Shift Assignment Management              |
