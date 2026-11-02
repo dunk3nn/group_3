@@ -38,5 +38,6 @@ CREATE TABLE Payments (
     payment_date DATETIME NOT NULL,
     FOREIGN KEY (entry_record_id) REFERENCES entry_records(id),
     FOREIGN KEY (fee_rule_id) REFERENCES Fee_Rules(id),
-    FOREIGN KEY (penalty_id) REFERENCES Penalties(id)
+      FOREIGN KEY (penalty_id) REFERENCES Penalties(id)
 );
+
