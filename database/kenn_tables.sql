@@ -9,8 +9,7 @@ CREATE TABLE Fee_Rules (
     vehicle_type_id INT NOT NULL,
     base_fee DECIMAL(10,2) NOT NULL CHECK (base_fee >= 0),
     free_hours INT NOT NULL DEFAULT 0 CHECK (free_hours >= 0),
-    overstay_rate_per_hour DECIMAL(10,2) NOT NULL DEFAULT 0.00
-        CHECK (overstay_rate_per_hour >= 0),
+    overstay_rate_per_hour DECIMAL(10,2) NOT NULL DEFAULT 0.00 CHECK (overstay_rate_per_hour >= 0),
     effective_date DATE NOT NULL,
     UNIQUE (entry_type_id, vehicle_type_id, effective_date),
     FOREIGN KEY (entry_type_id) REFERENCES Entry_Types(id),
