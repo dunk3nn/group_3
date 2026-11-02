@@ -1,11 +1,11 @@
-CREATE TABLE travelers (
+CREATE TABLE IF NOT EXISTS travelers (
     id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     contact_number VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE vehicles (
+CREATE TABLE IF NOT EXISTS vehicles (
     id INT PRIMARY KEY AUTO_INCREMENT,
     traveler_id INT NOT NULL,
     vehicle_name VARCHAR(255) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE vehicles (
         REFERENCES travelers(id)
 );
 
-CREATE TABLE entry_records (
+CREATE TABLE IF NOT EXISTS entry_records (
     id INT PRIMARY KEY AUTO_INCREMENT,
     traveler_id INT NOT NULL,
     vehicle_id INT NOT NULL,
@@ -30,3 +30,4 @@ CREATE TABLE entry_records (
     FOREIGN KEY (vehicle_id)
         REFERENCES vehicles(id)
 ); 
+
