@@ -1,6 +1,3 @@
-
--- database/albert_queries.sql
-
 SELECT u.id, u.username, u.password, r.name AS role
 FROM Users u
 INNER JOIN Roles r ON r.id = u.role_id
