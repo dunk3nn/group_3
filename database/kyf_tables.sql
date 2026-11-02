@@ -1,4 +1,3 @@
-
 CREATE TABLE Checkpoints (
     id INT AUTO_INCREMENT PRIMARY KEY,
     checkpoint_name VARCHAR(100) NOT NULL,

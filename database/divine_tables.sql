@@ -29,4 +29,4 @@ CREATE TABLE IF NOT EXISTS entry_records (
 
     FOREIGN KEY (vehicle_id)
         REFERENCES vehicles(id)
-); 
+);
