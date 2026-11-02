@@ -21,7 +21,7 @@ CREATE TABLE Shifts (
     end_time TIME NOT NULL
 );
 
-
+https://github.com/dunk3nn/group_3/pull/37/conflict?name=database%252Fkenn_tables.sql&base_oid=a625716a0eb5dd9608e4bfa14bdd2107b3b0cfdc&head_oid=6943216c1f454cfcb49a050417f25d1b47ae8fc8
 CREATE TABLE Checkpoint_Assignments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     personnel_id INT NOT NULL,
@@ -34,7 +34,6 @@ CREATE TABLE Checkpoint_Assignments (
 
     FOREIGN KEY (shift_id)
         REFERENCES Shifts(id),
-
     FOREIGN KEY (checkpoint_id)
         REFERENCES Checkpoints(id)
 );

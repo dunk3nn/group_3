@@ -18,7 +18,7 @@ CREATE TABLE alerts (
     is_read BOOLEAN NOT NULL DEFAULT FALSE,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (violations_id) REFERENCES violations(id),
-    FOREIGN KEY (checkpoints_id) REFERENCES checkpoints(id)
+   FOREIGN KEY (checkpoints_id) REFERENCES Checkpoints(id)
 );
 
 CREATE TABLE audit_logs (
@@ -29,5 +29,5 @@ CREATE TABLE audit_logs (
     record_id INT,
     details TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (users_id) REFERENCES users(id)
+    FOREIGN KEY (users_id) REFERENCES Users(id)
 );
