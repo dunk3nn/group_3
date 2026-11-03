@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkpoint Assignment Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .assignment-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .assignment-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .assignment-form input,
+        .assignment-form select,
+        .assignment-form button {
+            padding: 10px;
+            font-size: 15px;
+        }
+
+        .assignment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .assignment-table th,
+        .assignment-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .assignment-table th {
+            background: #f2f2f2;
+        }
+
+        .action-button {
+            padding: 7px 12px;
+            margin: 3px;
+            cursor: pointer;
+        }
+
+        #message {
+            margin: 15px 0;
+        }
+
+        @media (max-width: 650px) {
+            .assignment-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="assignment-container">
+
+        <h1>Checkpoint Assignment Management</h1>
+        <p>Manage personnel, shifts, and checkpoint assignments.</p>
+
+        <h2 id="formTitle">Add Assignment</h2>
+
+        <form id="assignmentForm" class="assignment-form">
+
+            <input type="hidden" id="assignmentId">
+
+            <select id="personnelId" required>
+                <option value="">Select Personnel</option>
+            </select>
+
+            <select id="shiftId" required>
+                <option value="">Select Shift</option>
+            </select>
+
+            <select id="checkpointId" required>
+                <option value="">Select Checkpoint</option>
+            </select>
+
+            <input type="date" id="assignmentDate" required>
+
+            <button type="submit" id="submitButton">
+                Add Assignment
+            </button>
+
+            <button type="button" id="cancelButton" hidden>
+                Cancel Edit
+            </button>
+
+        </form>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+        <h2>Assignment Records</h2>
+
+        <table class="assignment-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Personnel</th>
+                    <th>Shift</th>
+                    <th>Checkpoint</th>
+                    <th>Assignment Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="assignmentTableBody">
+                <tr>
+                    <td colspan="6">Loading assignments...</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </main>
+
+    <script src="../js/api.js"></script>
+
+    <script>
+        const form = document.getElementById('assignmentForm');
+        const tableBody = document.getElementById('assignmentTableBody');
+        const message = document.getElementById('message');
+        const submitButton = document.getElementById('submitButton');
+        const cancelButton = document.getElementById('cancelButton');
+
+        // Display dates in Philippine time
+        function formatDate(value) {
+            if (!value) return '';
+
+            const date = new Date(value);
+
+            return new Intl.DateTimeFormat('en-CA', {
+                timeZone: 'Asia/Manila',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).format(date);
+        }
+
+        // Load dropdown options
+        async function loadDropdowns() {
+            const [personnelResult, shiftsResult, checkpointsResult] =
+                await Promise.all([
+                    getPersonnel(),
+                    getShifts(),
+                    getCheckpoints()
+                ]);
+
+            if (!personnelResult.success ||
+                !shiftsResult.success ||
+                !checkpointsResult.success) {
+                throw new Error('Unable to load dropdown options.');
+            }
+
+            const personnelSelect = document.getElementById('personnelId');
+            const shiftSelect = document.getElementById('shiftId');
+            const checkpointSelect = document.getElementById('checkpointId');
+
+            personnelResult.data.forEach(person => {
+                const option = document.createElement('option');
+                option.value = person.id;
+                option.textContent = person.name;
+                personnelSelect.appendChild(option);
+            });
+
+            shiftsResult.data.forEach(shift => {
+                const option = document.createElement('option');
+                option.value = shift.id;
+                option.textContent = shift.shift_name;
+                shiftSelect.appendChild(option);
+            });
+
+            checkpointsResult.data.forEach(checkpoint => {
+                const option = document.createElement('option');
+                option.value = checkpoint.id;
+                option.textContent = checkpoint.checkpoint_name;
+                checkpointSelect.appendChild(option);
+            });
+        }
+
+        // Load assignments
+        async function loadAssignments() {
+            try {
+                const result = await getAssignments();
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to load assignments.');
+                }
+
+                tableBody.innerHTML = '';
+
+                if (!result.data || result.data.length === 0) {
+                    tableBody.innerHTML =
+                        '<tr><td colspan="6">No assignments found.</td></tr>';
+                    return;
+                }
+
+                result.data.forEach(assignment => {
+                    const row = document.createElement('tr');
+
+                    const values = [
+                        assignment.id,
+                        assignment.personnel_name,
+                        assignment.shift_name,
+                        assignment.checkpoint_name,
+                        formatDate(assignment.assignment_date)
+                    ];
+
+                    values.forEach(value => {
+                        const cell = document.createElement('td');
+                        cell.textContent = value ?? '';
+                        row.appendChild(cell);
+                    });
+
+                    const actions = document.createElement('td');
+
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.className = 'action-button';
+                    editButton.addEventListener('click', () => {
+                        editAssignment(assignment);
+                    });
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.className = 'action-button';
+                    deleteButton.addEventListener('click', () => {
+                        removeAssignment(assignment.id);
+                    });
+
+                    actions.append(editButton, deleteButton);
+                    row.appendChild(actions);
+
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                message.textContent = error.message;
+                tableBody.innerHTML =
+                    '<tr><td colspan="6">Failed to load assignments.</td></tr>';
+            }
+        }
+
+        // Add or update assignment
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('assignmentId').value;
+
+            const data = {
+                personnel_id: Number(document.getElementById('personnelId').value),
+                shift_id: Number(document.getElementById('shiftId').value),
+                checkpoint_id: Number(document.getElementById('checkpointId').value),
+                assignment_date: document.getElementById('assignmentDate').value
+            };
+
+            try {
+                const result = id
+                    ? await updateAssignment(id, data)
+                    : await addAssignment(data);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to save assignment.');
+                }
+
+                message.textContent = id
+                    ? 'Assignment updated successfully.'
+                    : 'Assignment added successfully.';
+
+                resetForm();
+                await loadAssignments();
+
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+
+        // Edit assignment
+        function editAssignment(assignment) {
+            document.getElementById('assignmentId').value = assignment.id;
+            document.getElementById('personnelId').value = assignment.personnel_id;
+            document.getElementById('shiftId').value = assignment.shift_id;
+            document.getElementById('checkpointId').value = assignment.checkpoint_id;
+            document.getElementById('assignmentDate').value =
+                formatDate(assignment.assignment_date);
+
+            document.getElementById('formTitle').textContent = 'Edit Assignment';
+            submitButton.textContent = 'Update Assignment';
+            cancelButton.hidden = false;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Delete assignment
+        async function removeAssignment(id) {
+            if (!confirm('Are you sure you want to delete this assignment?')) {
+                return;
+            }
+
+            try {
+                const result = await deleteAssignment(id);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to delete assignment.');
+                }
+
+                message.textContent = 'Assignment deleted successfully.';
+                await loadAssignments();
+
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            form.reset();
+
+            document.getElementById('assignmentId').value = '';
+            document.getElementById('formTitle').textContent = 'Add Assignment';
+
+            submitButton.textContent = 'Add Assignment';
+            cancelButton.hidden = true;
+        }
+
+        cancelButton.addEventListener('click', resetForm);
+
+        // Initialize page
+        async function initializePage() {
+            try {
+                await loadDropdowns();
+                await loadAssignments();
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        }
+
+        initializePage();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <main class="container">
+
+        <h1>Personnel Management</h1>
+        <p>Manage personnel records.</p>
+
+        <!-- PERSONNEL FORM -->
+        <section>
+            <h2>Add Personnel</h2>
+
+            <form id="personnelForm">
+                <input type="hidden" id="personnelId">
+
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" required>
+
+                <label for="position">Position:</label>
+                <input type="text" id="position">
+
+                <label for="department_id">Department ID:</label>
+                <input type="number" id="department_id" min="1">
+
+                <label for="contact_number">Contact Number:</label>
+                <input type="text" id="contact_number">
+
+                <button type="submit" id="saveButton">Add Personnel</button>
+                <button type="button" id="cancelButton">Cancel</button>
+            </form>
+
+            <p id="message" role="status"></p>
+        </section>
+
+        <!-- PERSONNEL RECORDS -->
+        <section>
+            <h2>Personnel Records</h2>
+
+            <button type="button" id="refreshButton">Refresh</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Contact Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="personnelTable">
+                    <tr>
+                        <td colspan="6">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script src="../js/api.js"></script>
+
+    <script>
+        // LOAD PERSONNEL
+        async function loadPersonnel() {
+            const table = document.getElementById('personnelTable');
+
+            try {
+                const result = await getPersonnel();
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Failed to load personnel.');
+                }
+
+                table.innerHTML = '';
+
+                if (result.data.length === 0) {
+                    table.innerHTML = '<tr><td colspan="6">No records found.</td></tr>';
+                    return;
+                }
+
+                result.data.forEach(person => {
+                    const row = document.createElement('tr');
+
+                    const values = [
+                        person.id,
+                        person.name,
+                        person.position || '',
+                        person.department_name || 'Not assigned',
+                        person.contact_number || ''
+                    ];
+
+                    values.forEach(value => {
+                        const cell = document.createElement('td');
+                        cell.textContent = value;
+                        row.appendChild(cell);
+                    });
+
+                    const actions = document.createElement('td');
+
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.type = 'button';
+                    editButton.onclick = () => editPersonnel(person);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.type = 'button';
+                    deleteButton.onclick = () => removePersonnel(person.id);
+
+                    actions.append(editButton, deleteButton);
+                    row.appendChild(actions);
+                    table.appendChild(row);
+                });
+
+            } catch (error) {
+                table.innerHTML = '<tr><td colspan="6">Unable to load records.</td></tr>';
+                document.getElementById('message').textContent = error.message;
+            }
+        }
+
+        // ADD OR UPDATE PERSONNEL
+        document.getElementById('personnelForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('personnelId').value;
+
+            const data = {
+                name: document.getElementById('name').value.trim(),
+                position: document.getElementById('position').value.trim(),
+                department_id: document.getElementById('department_id').value
+                    ? Number(document.getElementById('department_id').value)
+                    : null,
+                contact_number: document.getElementById('contact_number').value.trim()
+            };
+
+            const message = document.getElementById('message');
+
+            try {
+                const result = id
+                    ? await updatePersonnel(id, data)
+                    : await addPersonnel(data);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to save personnel.');
+                }
+
+                message.textContent = result.message;
+                resetForm();
+                loadPersonnel();
+
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+
+        // EDIT PERSONNEL
+        function editPersonnel(person) {
+            document.getElementById('personnelId').value = person.id;
+            document.getElementById('name').value = person.name || '';
+            document.getElementById('position').value = person.position || '';
+            document.getElementById('department_id').value = person.department_id || '';
+            document.getElementById('contact_number').value = person.contact_number || '';
+
+            document.getElementById('saveButton').textContent = 'Update Personnel';
+        }
+
+        // DELETE PERSONNEL
+        async function removePersonnel(id) {
+            if (!confirm('Are you sure you want to delete this personnel?')) {
+                return;
+            }
+
+            try {
+                const result = await deletePersonnel(id);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to delete personnel.');
+                }
+
+                document.getElementById('message').textContent = result.message;
+                resetForm();
+                loadPersonnel();
+
+            } catch (error) {
+                document.getElementById('message').textContent = error.message;
+            }
+        }
+
+        // RESET FORM
+        function resetForm() {
+            document.getElementById('personnelForm').reset();
+            document.getElementById('personnelId').value = '';
+            document.getElementById('saveButton').textContent = 'Add Personnel';
+        }
+
+        // BUTTON EVENTS
+        document.getElementById('cancelButton').onclick = resetForm;
+        document.getElementById('refreshButton').onclick = loadPersonnel;
+
+        // LOAD RECORDS WHEN PAGE OPENS
+        loadPersonnel();
+    </script>
+
+</body>
+</html>
