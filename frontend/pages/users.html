@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="users-page">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <h2>Border Entry System</h2>
+
+        <nav>
+            <a href="../index.html">Dashboard</a>
+            <a href="users.html" class="active">User Management</a>
+            <a href="personnel.html">Personnel</a>
+            <a href="shifts.html">Shifts</a>
+            <a href="assignments.html">Assignments</a>
+            <a href="checkpoints.html">Checkpoints</a>
+            <a href="entries.html">Entries</a>
+            <a href="violations.html">Violations</a>
+            <a href="payments.html">Payments</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <header>
+            <h1>User Management</h1>
+            <p>Manage system users, roles, and account status.</p>
+        </header>
+
+        <!-- User Statistics -->
+        <section class="dashboard-cards">
+            <div class="card">
+                <h3>Total Users</h3>
+                <p id="totalUsers">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Active Users</h3>
+                <p id="activeUsers">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Inactive Users</h3>
+                <p id="inactiveUsers">0</p>
+            </div>
+        </section>
+
+        <!-- Add and Edit User Form -->
+        <section class="user-form">
+
+            <h2 id="formTitle">Add New User</h2>
+
+            <form id="userForm">
+
+                <input type="hidden" id="userId" name="id">
+
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter username"
+                    minlength="3"
+                    maxlength="50"
+                    required
+                >
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    minlength="8"
+                    required
+                >
+
+                <small id="passwordHint">
+                    Password must contain at least 8 characters.
+                </small>
+
+                <label for="role">User Role</label>
+                <select id="role" name="role_id" required>
+                    <option value="">Select Role</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Staff</option>
+                </select>
+
+                <label for="status">Account Status</label>
+                <select id="status" name="is_active" required>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+
+                <div class="form-buttons">
+                    <button type="submit" id="saveUserBtn">
+                        Save User
+                    </button>
+
+                    <button type="reset" id="clearUserBtn">
+                        Clear
+                    </button>
+
+                    <button type="button" id="cancelEditBtn" hidden>
+                        Cancel Edit
+                    </button>
+                </div>
+
+            </form>
+
+            <p id="userMessage" role="status"></p>
+
+        </section>
+
+        <!-- Registered Users Table -->
+        <section class="users-table">
+
+            <div class="table-header">
+                <div>
+                    <h2>Registered Users</h2>
+                    <p>Manage all registered system accounts.</p>
+                </div>
+
+                <button type="button" id="refreshUsersBtn">
+                    Refresh Users
+                </button>
+            </div>
+
+            <label for="searchUser">Search Users</label>
+            <input
+                type="search"
+                id="searchUser"
+                placeholder="Search by username or role..."
+            >
+
+            <p id="tableMessage" role="status">
+                No users loaded yet.
+            </p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="userTableBody">
+                        <tr>
+                            <td colspan="6">No users available.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <!-- Users and Roles INNER JOIN Report -->
+        <section class="join-report">
+
+            <h2>Users and Roles Report</h2>
+            <p>View registered users together with their assigned roles.</p>
+
+            <button type="button" id="loadReport">
+                Generate Report
+            </button>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Role ID</th>
+                            <th>Role Name</th>
+                            <th>Account Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="reportTableBody">
+                        <tr>
+                            <td colspan="5">No report generated yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/users.js"></script>
+</body>
+</html>
