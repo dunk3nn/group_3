@@ -1,82 +1,12 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fee Rules Management</title>
-    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Fee Rules Management</h1>
-        
-        <!-- Add New Fee Rule Form -->
-        <section class="form-section">
-            <h2>Add Fee Rule</h2>
-            <form id="fee-rule-form">
-                <div class="form-group">
-                    <label for="entry-type">Entry Type:</label>
-                    <select id="entry-type" name="entry_type_id" required>
-                        <option value="">Select Entry Type</option>
-                        <!-- Dynamically populated via JS -->
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="vehicle-type">Vehicle Type:</label>
-                    <select id="vehicle-type" name="vehicle_type_id" required>
-                        <option value="">Select Vehicle Type</option>
-                        <!-- Dynamically populated via JS -->
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="base-fee">Base Fee ($):</label>
-                    <input type="number" id="base-fee" name="base_fee" step="0.01" min="0" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="free-hours">Free Hours:</label>
-                    <input type="number" id="free-hours" name="free_hours" min="0" value="0" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="overstay-rate">Overstay Rate/Hour ($):</label>
-                    <input type="number" id="overstay-rate" name="overstay_rate_per_hour" step="0.01" min="0" value="0.00" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="effective-date">Effective Date:</label>
-                    <input type="date" id="effective-date" name="effective_date" required>
-                </div>
-
-                <button type="submit">Save Fee Rule</button>
-            </form>
-        </section>
-
-        <!-- Fee Rules Table -->
-        <section class="table-section">
-            <h2>Existing Fee Rules</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Entry Type</th>
-                        <th>Vehicle Type</th>
-                        <th>Base Fee</th>
-                        <th>Free Hours</th>
-                        <th>Overstay Rate</th>
-                        <th>Effective Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="fee-rules-list">
-                    <!-- Loaded dynamically from db -->
-                </tbody>
-            </table>
-        </section>
-    </div>
-    <script src="../js/fee_rules.js"></script>
+    <h1>Fee Rules</h1>
+    <p>Manage border system fee rules and rates here.</p>
 </body>
 </html>

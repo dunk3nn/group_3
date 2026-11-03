@@ -3,119 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fee and Payment Management</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Fee and Payment Management - Border Systems</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
+        h1, h2, h3 { color: #2c3e50; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .card { background: #fafafa; border: 1px solid #ddd; padding: 20px; border-radius: 6px; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 14px; }
+        input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { background: #3498db; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-size: 15px; }
+        button:hover { background: #2980b9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #2c3e50; color: white; }
+        .full-width { grid-column: span 2; }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Navigation Header -->
-        <header class="module-header">
-            <h1>Fee and Payment Management</h1>
-            <nav>
-                <a href="../index.html">Dashboard</a> | 
-                <a href="fee_rules.html">Fee Rules</a> | 
-                <a href="penalties.html">Penalties</a> | 
-                <a href="payments.html">Payments</a>
-            </nav>
-        </header>
+        <h1>Fee and Payment Management Module</h1>
+        <p>Manage fee rules, penalties, track payments, and review required JOIN reports.</p>
 
-        <!-- Process Payment Form Section -->
-        <section class="form-section">
-            <h2>Process New Payment</h2>
-            <form id="payment-form">
-                <div class="form-group">
-                    <label for="entry-record">Entry Record ID:</label>
-                    <input type="number" id="entry-record" name="entry_record_id" required>
-                </div>
+        <div class="section-grid">
+            <!-- Fee Rules Management -->
+            <div class="card">
+                <h2>Fee Rules</h2>
+                <form id="fee-rule-form">
+                    <div class="form-group">
+                        <label>Vehicle Type:</label>
+                        <input type="text" id="fee-vehicle" required placeholder="e.g. Car, Truck">
+                    </div>
+                    <div class="form-group">
+                        <label>Base Fee ($):</label>
+                        <input type="number" step="0.01" id="fee-amount" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="fee-desc" placeholder="Rule description">
+                    </div>
+                    <button type="submit">Add Fee Rule</button>
+                </form>
+                <h3>Existing Fee Rules</h3>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Vehicle</th><th>Fee</th><th>Description</th></tr>
+                    </thead>
+                    <tbody id="fee-rules-list"></tbody>
+                </table>
+            </div>
 
-                <div class="form-group">
-                    <label for="fee-rule">Fee Rule ID:</label>
-                    <input type="number" id="fee-rule" name="fee_rule_id" required>
-                </div>
+            <!-- Penalties Management -->
+            <div class="card">
+                <h2>Penalties</h2>
+                <form id="penalty-form">
+                    <div class="form-group">
+                        <label>Violation Type:</label>
+                        <input type="text" id="penalty-violation" required placeholder="e.g. Overweight">
+                    </div>
+                    <div class="form-group">
+                        <label>Penalty Amount ($):</label>
+                        <input type="number" step="0.01" id="penalty-amount" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="penalty-desc" placeholder="Violation details">
+                    </div>
+                    <button type="submit">Add Penalty</button>
+                </form>
+                <h3>Existing Penalties</h3>
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Violation</th><th>Amount</th><th>Description</th></tr>
+                    </thead>
+                    <tbody id="penalties-list"></tbody>
+                </table>
+            </div>
 
-                <div class="form-group">
-                    <label for="penalty-id">Penalty ID (Optional):</label>
-                    <input type="number" id="penalty-id" name="penalty_id" placeholder="Leave blank if none">
-                </div>
+            <!-- Payment Form & Records -->
+            <div class="card full-width">
+                <h2>Process New Payment & Records</h2>
+                <form id="payment-form">
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+                        <div class="form-group">
+                            <label>Entry Record ID:</label>
+                            <input type="number" id="entry-record" required placeholder="Entry ID">
+                        </div>
+                        <div class="form-group">
+                            <label>Fee Rule ID:</label>
+                            <input type="number" id="fee-rule" required placeholder="Fee ID">
+                        </div>
+                        <div class="form-group">
+                            <label>Penalty ID (Opt):</label>
+                            <input type="number" id="penalty-id" placeholder="Penalty ID">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount Paid ($):</label>
+                            <input type="number" step="0.01" id="amount-paid" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Method:</label>
+                            <select id="payment-method">
+                                <option value="Cash">Cash</option>
+                                <option value="Card">Card</option>
+                                <option value="Digital Wallet">Digital Wallet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" style="margin-top: 10px;">Submit Payment</button>
+                </form>
 
-                <div class="form-group">
-                    <label for="amount-paid">Amount Paid ($):</label>
-                    <input type="number" id="amount-paid" name="amount_paid" step="0.01" min="0.01" required>
-                </div>
+                <h3>Recorded Payments</h3>
+                <table>
+                    <thead>
+                        <tr><th>Payment ID</th><th>Entry ID</th><th>Fee Rule ID</th><th>Penalty ID</th><th>Amount Paid</th><th>Method</th><th>Timestamp</th></tr>
+                    </thead>
+                    <tbody id="payments-list"></tbody>
+                </table>
+            </div>
 
-                <div class="form-group">
-                    <label for="payment-method">Payment Method:</label>
-                    <select id="payment-method" name="payment_method" required>
-                        <option value="Cash">Cash</option>
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Debit Card">Debit Card</option>
-                        <option value="Mobile Payment">Mobile Payment</option>
-                    </select>
-                </div>
+            <!-- Reports Section -->
+            <div class="card">
+                <h2>Report: Entries with No Payment (LEFT JOIN)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Entry ID</th><th>Vehicle Type</th><th>Check-in Time</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="no-payment-report-list"></tbody>
+                </table>
+            </div>
 
-                <button type="submit" class="btn-submit">Submit Payment</button>
-            </form>
-        </section>
-
-        <!-- Recent Payments Table Section -->
-        <section class="table-section">
-            <h2>Recent Payments Record</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Payment ID</th>
-                        <th>Record ID</th>
-                        <th>Fee Rule</th>
-                        <th>Penalty ID</th>
-                        <th>Amount Paid</th>
-                        <th>Method</th>
-                        <th>Date & Time</th>
-                    </tr>
-                </thead>
-                <tbody id="payments-list">
-                    <!-- Dynamically populated via payments.js -->
-                </tbody>
-            </table>
-        </section>
-
-        <!-- JOIN Report 1: Entries with No Payment (LEFT JOIN) -->
-        <section class="report-section">
-            <h2>Report: Entries with No Payment (LEFT JOIN)</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Entry ID</th>
-                        <th>Vehicle Type</th>
-                        <th>Check-in Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="no-payment-report-list">
-                    <!-- Populated via backend LEFT JOIN endpoint -->
-                </tbody>
-            </table>
-        </section>
-
-        <!-- JOIN Report 2: Penalties vs. Payments (FULL OUTER JOIN via UNION) -->
-        <section class="report-section">
-            <h2>Report: Penalties vs. Payments Comparison (FULL OUTER JOIN)</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Record ID</th>
-                        <th>Penalty Amount</th>
-                        <th>Amount Paid</th>
-                        <th>Balance Status</th>
-                    </tr>
-                </thead>
-                <tbody id="penalties-vs-payments-list">
-                    <!-- Populated via backend FULL OUTER JOIN endpoint -->
-                </tbody>
-            </table>
-        </section>
+            <div class="card">
+                <h2>Report: Penalties vs Payments (UNION)</h2>
+                <table>
+                    <thead>
+                        <tr><th>Record ID</th><th>Penalty Amount</th><th>Amount Paid</th><th>Balance Status</th></tr>
+                    </thead>
+                    <tbody id="penalties-vs-payments-list"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <!-- Link your JS file -->
-    <script src="../js/payments.js"></script>
+    <!-- Frontend Script Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadFeeRules();
+            loadPenalties();
+            loadPayments();
+            loadNoPaymentReport();
+            loadPenaltiesVsPaymentsReport();
+
+            // Fee Rule Form Submit
+            document.getElementById("fee-rule-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const data = {
+                    vehicle_type: document.getElementById("fee-vehicle").value,
+                    base_fee: document.getElementById("fee-amount").value,
+                    description: document.getElementById("fee-desc").value
+                };
+                const res = await fetch('http://localhost:3000/api/fee-rules', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                });
+                if (res.ok) { alert("Fee rule added!"); document.getElementById("fee-rule-form").reset(); loadFeeRules(); }
+            });
+
+            // Penalty Form Submit
+            document.getElementById("penalty-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const data = {
+                    violation_type: document.getElementById("penalty-violation").value,
+                    penalty_amount: document.getElementById("penalty-amount").value,
+                    description: document.getElementById("penalty-desc").value
+                };
+                const res = await fetch('http://localhost:3000/api/penalties', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                });
+                if (res.ok) { alert("Penalty added!"); document.getElementById("penalty-form").reset(); loadPenalties(); }
+            });
+
+            // Payment Form Submit
+            document.getElementById("payment-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const data = {
+                    entry_record_id: document.getElementById("entry-record").value,
+                    fee_rule_id: document.getElementById("fee-rule").value,
+                    penalty_id: document.getElementById("penalty-id").value || null,
+                    amount_paid: document.getElementById("amount-paid").value,
+                    payment_method: document.getElementById("payment-method").value
+                };
+                const res = await fetch('http://localhost:3000/api/payments', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+                });
+                if (res.ok) { 
+                    alert("Payment processed successfully!"); 
+                    document.getElementById("payment-form").reset(); 
+                    loadPayments(); 
+                    loadNoPaymentReport(); 
+                    loadPenaltiesVsPaymentsReport(); 
+                }
+            });
+        });
+
+        async function loadFeeRules() {
+            try {
+                const res = await fetch('http://localhost:3000/api/fee-rules');
+                const data = await res.json();
+                const tbody = document.getElementById("fee-rules-list");
+                tbody.innerHTML = "";
+                if (Array.isArray(data)) {
+                    data.forEach(r => {
+                        tbody.innerHTML += `<tr><td>${r.fee_rule_id || r.id}</td><td>${r.vehicle_type}</td><td>$${parseFloat(r.base_fee).toFixed(2)}</td><td>${r.description || ''}</td></tr>`;
+                    });
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadPenalties() {
+            try {
+                const res = await fetch('http://localhost:3000/api/penalties');
+                const data = await res.json();
+                const tbody = document.getElementById("penalties-list");
+                tbody.innerHTML = "";
+                if (Array.isArray(data)) {
+                    data.forEach(r => {
+                        tbody.innerHTML += `<tr><td>${r.penalty_id || r.id}</td><td>${r.violation_type}</td><td>$${parseFloat(r.penalty_amount).toFixed(2)}</td><td>${r.description || ''}</td></tr>`;
+                    });
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadPayments() {
+            try {
+                const res = await fetch('http://localhost:3000/api/payments');
+                const data = await res.json();
+                const tbody = document.getElementById("payments-list");
+                tbody.innerHTML = "";
+                if (Array.isArray(data)) {
+                    data.forEach(p => {
+                        tbody.innerHTML += `<tr><td>${p.payment_id}</td><td>${p.entry_record_id}</td><td>${p.fee_rule_id}</td><td>${p.penalty_id || 'None'}</td><td>$${parseFloat(p.amount_paid).toFixed(2)}</td><td>${p.payment_method}</td><td>${p.created_at}</td></tr>`;
+                    });
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadNoPaymentReport() {
+            try {
+                const res = await fetch('http://localhost:3000/api/reports/no-payment');
+                const data = await res.json();
+                const tbody = document.getElementById("no-payment-report-list");
+                tbody.innerHTML = "";
+                if (Array.isArray(data)) {
+                    data.forEach(row => {
+                        tbody.innerHTML += `<tr><td>${row.entry_id}</td><td>${row.vehicle_type}</td><td>${row.checkin_time}</td><td>${row.status}</td></tr>`;
+                    });
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadPenaltiesVsPaymentsReport() {
+            try {
+                const res = await fetch('http://localhost:3000/api/reports/penalties-vs-payments');
+                const data = await res.json();
+                const tbody = document.getElementById("penalties-vs-payments-list");
+                tbody.innerHTML = "";
+                if (Array.isArray(data)) {
+                    data.forEach(row => {
+                        tbody.innerHTML += `<tr><td>${row.record_id}</td><td>$${parseFloat(row.penalty_pay || 0).toFixed(2)}</td><td>$${parseFloat(row.amount_paid || 0).toFixed(2)}</td><td>${row.balance_status}</td></tr>`;
+                    });
+                }
+            } catch (err) { console.error(err); }
+        }
+    </script>
 </body>
 </html>
