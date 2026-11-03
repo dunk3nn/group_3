@@ -1,1 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee and Payment Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <header class="module-header">
+            <h1>Fee and Payment Management</h1>
+            <nav>
+                <a href="../index.html">Dashboard</a> | 
+                <a href="fee_rules.html">Fee Rules</a> | 
+                <a href="penalties.html">Penalties</a> | 
+                <a href="payments.html">Payments</a>
+            </nav>
+        </header>
 
+        <!-- Process Payment Form Section -->
+        <section class="form-section">
+            <h2>Process New Payment</h2>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="entry-record">Entry Record ID:</label>
+                    <input type="number" id="entry-record" name="entry_record_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fee-rule">Fee Rule ID:</label>
+                    <input type="number" id="fee-rule" name="fee_rule_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="penalty-id">Penalty ID (Optional):</label>
+                    <input type="number" id="penalty-id" name="penalty_id" placeholder="Leave blank if none">
+                </div>
+
+                <div class="form-group">
+                    <label for="amount-paid">Amount Paid ($):</label>
+                    <input type="number" id="amount-paid" name="amount_paid" step="0.01" min="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-method">Payment Method:</label>
+                    <select id="payment-method" name="payment_method" required>
+                        <option value="Cash">Cash</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Mobile Payment">Mobile Payment</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Payment</button>
+            </form>
+        </section>
+
+        <!-- Recent Payments Table Section -->
+        <section class="table-section">
+            <h2>Recent Payments Record</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Record ID</th>
+                        <th>Fee Rule</th>
+                        <th>Penalty ID</th>
+                        <th>Amount Paid</th>
+                        <th>Method</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody id="payments-list">
+                    <!-- Dynamically populated via payments.js -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- JOIN Report 1: Entries with No Payment (LEFT JOIN) -->
+        <section class="report-section">
+            <h2>Report: Entries with No Payment (LEFT JOIN)</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Entry ID</th>
+                        <th>Vehicle Type</th>
+                        <th>Check-in Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="no-payment-report-list">
+                    <!-- Populated via backend LEFT JOIN endpoint -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- JOIN Report 2: Penalties vs. Payments (FULL OUTER JOIN via UNION) -->
+        <section class="report-section">
+            <h2>Report: Penalties vs. Payments Comparison (FULL OUTER JOIN)</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>Penalty Amount</th>
+                        <th>Amount Paid</th>
+                        <th>Balance Status</th>
+                    </tr>
+                </thead>
+                <tbody id="penalties-vs-payments-list">
+                    <!-- Populated via backend FULL OUTER JOIN endpoint -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Link your JS file -->
+    <script src="../js/payments.js"></script>
+</body>
+</html>
