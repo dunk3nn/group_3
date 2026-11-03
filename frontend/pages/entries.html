@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry and Traveler Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Border Entry Payment and Personnel Tracking System</h1>
+        <h2>Entry and Traveler Management</h2>
+    </header>
+
+    <nav>
+        <a href="../index.html">Dashboard</a>
+    </nav>
+
+    <main>
+
+        <!-- TRAVELER MANAGEMENT -->
+        <section>
+            <h2>Traveler Management</h2>
+
+            <form id="travelerForm">
+                <input type="text" id="first_name" placeholder="First Name" required>
+                <input type="text" id="last_name" placeholder="Last Name" required>
+                <input type="text" id="contact_number" placeholder="Contact Number" required>
+                <button type="submit">Add Traveler</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Contact Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="travelerTable"></tbody>
+            </table>
+        </section>
+
+        <!-- VEHICLE MANAGEMENT -->
+        <section>
+            <h2>Vehicle Management</h2>
+
+            <form id="vehicleForm">
+                <select id="vehicle_traveler_id" required>
+                    <option value="">Select Traveler</option>
+                </select>
+                <input type="text" id="vehicle_name" placeholder="Vehicle Name" required>
+                <input type="text" id="plate_number" placeholder="Plate Number" required>
+                <input type="number" id="capacity" placeholder="Capacity" min="1" required>
+                <button type="submit">Add Vehicle</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Traveler ID</th>
+                        <th>Vehicle Name</th>
+                        <th>Plate Number</th>
+                        <th>Capacity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="vehicleTable"></tbody>
+            </table>
+        </section>
+
+        <!-- ENTRY LOGGING -->
+        <section>
+            <h2>Entry Logging</h2>
+
+            <form id="entryForm">
+                <select id="entry_traveler_id" required>
+                    <option value="">Select Traveler</option>
+                </select>
+
+                <select id="entry_vehicle_id" required>
+                    <option value="">Select Vehicle</option>
+                </select>
+
+                <input type="date" id="entry_date" required>
+                <input type="time" id="entry_time" required>
+                <input type="text" id="purpose" placeholder="Purpose of Entry" required>
+
+                <button type="submit">Record Entry</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Traveler</th>
+                        <th>Vehicle</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Purpose</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="entryTable"></tbody>
+            </table>
+        </section>
+
+        <!-- ENTRY REPORT -->
+        <section>
+            <h2>Entry Report</h2>
+            <p>The report will display entry records with traveler and vehicle information using INNER JOIN.</p>
+            <div id="entryReport"></div>
+        </section>
+
+    </main>
+
+<script src="../js/api.js"></script>
+<script src="../js/entries.js"></script>
+</body>
+</html>
