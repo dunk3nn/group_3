@@ -2,7 +2,11 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+<<<<<<< HEAD
 const db = require('./config/db');
+=======
+    const db = require('./config/db');
+>>>>>>> origin/main
 
 const travelerRoutes = require('./routes/travelerRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
@@ -19,15 +23,21 @@ app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/entry-records', entryRecordRoutes);
 
 app.get('/', (req, res) => {
+    app.get('/test', (req, res) => {
+    res.send('TEST ROUTE IS WORKING!');
+});
     res.json({
         message: 'Border Entry Payment and Personnel Tracking System API is running!'
     });
 });
 
+<<<<<<< HEAD
 app.get('/test', (req, res) => {
     res.send('TEST ROUTE IS WORKING!');
 });
 
+=======
+>>>>>>> origin/main
 db.getConnection()
     .then(connection => {
         console.log('MySQL connected successfully!');
