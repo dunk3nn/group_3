@@ -16,10 +16,12 @@ CREATE TABLE IF NOT EXISTS vehicles (
         REFERENCES travelers(id)
 );
 
-CREATE TABLE IF NOT EXISTS entry_records (
+
+ CREATE TABLE IF NOT EXISTS entry_records (
     id INT PRIMARY KEY AUTO_INCREMENT,
     traveler_id INT NOT NULL,
     vehicle_id INT NOT NULL,
+    checkpoint_id INT NULL,
     entry_date DATE NOT NULL,
     entry_time TIME NOT NULL,
     purpose VARCHAR(255) NOT NULL,
@@ -28,5 +30,8 @@ CREATE TABLE IF NOT EXISTS entry_records (
         REFERENCES travelers(id),
 
     FOREIGN KEY (vehicle_id)
-        REFERENCES vehicles(id)
+        REFERENCES vehicles(id),
+
+    FOREIGN KEY (checkpoint_id)
+        REFERENCES checkpoints(id)
 );
