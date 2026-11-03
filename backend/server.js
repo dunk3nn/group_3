@@ -7,6 +7,10 @@ require('dotenv').config();
 const travelerRoutes = require('./routes/travelerRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const entryRecordRoutes = require('./routes/entryRecordRoutes');
+const violationRoutes = require('./routes/violationRoutes');
+const auditLogRoutes = require('./routes/auditLogRoutes');
+const alertRoutes = require('./routes/alertRoutes');
+
 
 const app = express();
 
@@ -17,6 +21,9 @@ app.use('/api/travelers', travelerRoutes);
 console.log('TRAVELER ROUTE REGISTERED');
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/entry-records', entryRecordRoutes);
+app.use('/api/violations', violationRoutes);
+app.use('/api/audit-logs', auditLogRoutes);
+app.use('/api/alerts', alertRoutes);    
 
 app.get('/', (req, res) => {
     app.get('/test', (req, res) => {
