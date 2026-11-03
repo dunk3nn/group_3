@@ -2,7 +2,11 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+<<<<<<< HEAD
+const db = require('./config/db');
+=======
     const db = require('./config/db');
+>>>>>>> origin/main
 
 const travelerRoutes = require('./routes/travelerRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
@@ -27,6 +31,13 @@ app.get('/', (req, res) => {
     });
 });
 
+<<<<<<< HEAD
+app.get('/test', (req, res) => {
+    res.send('TEST ROUTE IS WORKING!');
+});
+
+=======
+>>>>>>> origin/main
 db.getConnection()
     .then(connection => {
         console.log('MySQL connected successfully!');
