@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Data & Checkpoint Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
+        h1, h2 { color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 8px; }
+        .container { display: flex; flex-direction: column; gap: 30px; }
+        .section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        form { display: flex; gap: 10px; margin-bottom: 15px; align-items: center; flex-wrap: wrap; }
+        input, select, button { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { background-color: #2c3e50; color: white; cursor: pointer; border: none; font-weight: bold; }
+        button:hover { background-color: #34495e; }
+        button.btn-delete { background-color: #e74c3c; }
+        button.btn-delete:hover { background-color: #c0392b; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #ecf0f1; color: #2c3e50; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .report-box { background-color: #e8f4f8; border-left: 5px solid #2980b9; }
+    </style>
+</head>
+<body>
+
+    <h1>Kyfer - Checkpoint & Master Data Management Dashboard</h1>
+    
+    <div class="container">
+        
+        <!-- 1. CHECKPOINT MANAGEMENT -->
+        <div class="section">
+            <h2>1. Checkpoint Management</h2>
+            <form id="checkpointForm">
+                <input type="hidden" id="checkpointId">
+                <input type="text" id="checkpointName" placeholder="Checkpoint Name" required>
+                <input type="text" id="checkpointLocation" placeholder="Location" required>
+                <button type="submit" id="checkpointBtn">Add Checkpoint</button>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Checkpoint Name</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="checkpointTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 2. LANE MANAGEMENT -->
+        <div class="section">
+            <h2>2. Lane Management</h2>
+            <form id="laneForm">
+                <input type="hidden" id="laneId">
+                <select id="laneCheckpointSelect" required>
+                    <option value="">-- Select Checkpoint --</option>
+                </select>
+                <input type="number" id="laneNumber" placeholder="Lane Number" min="1" required>
+                <button type="submit" id="laneBtn">Add Lane</button>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Checkpoint ID</th>
+                        <th>Lane Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="laneTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. VEHICLE TYPE MANAGEMENT -->
+        <div class="section">
+            <h2>3. Vehicle Type Management</h2>
+            <form id="vehicleForm">
+                <input type="hidden" id="vehicleTypeId">
+                <input type="text" id="vehicleTypeName" placeholder="Vehicle Type (e.g., SUV)" required>
+                <input type="number" id="vehicleBaseFee" placeholder="Base Fee" step="0.01" min="0" required>
+                <button type="submit" id="vehicleBtn">Add Vehicle Type</button>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Vehicle Type Name</th>
+                        <th>Base Fee</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="vehicleTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. INNER JOIN CROSS-DATA REPORT -->
+        <div class="section report-box">
+            <h2>4. Lanes with their Checkpoints INNER JOIN Report</h2>
+            <p><em>Simulated active operational relational table view.</em></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lane ID</th>
+                        <th>Lane Number</th>
+                        <th>Assigned Checkpoint Name</th>
+                        <th>Physical Location Boundary</th>
+                    </tr>
+                </thead>
+                <tbody id="joinReportTableBody">
+                    <!-- Joined records dynamically computed -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        // MOCK DATA STORE BASED ON DATABASE SCHEMA SEED STRUCTURE
+        let checkpoints = [{ id: 1, checkpoint_name: 'Main Entry Checkpoint', location: 'Border Entry Point' }];
+        let lanes = [
+            { id: 1, checkpoint_id: 1, lane_number: 1 },
+            { id: 2, checkpoint_id: 1, lane_number: 2 },
+            { id: 3, checkpoint_id: 1, lane_number: 3 }
+        ];
+        let vehicleTypes = [
+            { id: 1, type_name: 'Motorcycle', base_fee: 20.00 },
+            { id: 2, type_name: 'Car', base_fee: 50.00 },
+            { id: 3, type_name: 'Van', base_fee: 80.00 }
+        ];
+
+        // RENDER MANAGEMENT ARRAYS TO SCREEN
+        function renderAll() {
+            // Render Checkpoints
+            const cpBody = document.getElementById('checkpointTableBody');
+            cpBody.innerHTML = '';
+            const cpSelect = document.getElementById('laneCheckpointSelect');
+            cpSelect.innerHTML = '<option value="">-- Select Checkpoint --</option>';
+            
+            checkpoints.forEach(cp => {
+                cpBody.innerHTML += `<tr>
+                    <td>${cp.id}</td>
+                    <td>${cp.checkpoint_name}</td>
+                    <td>${cp.location}</td>
+                    <td>
+                        <button onclick="editCheckpoint(${cp.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteCheckpoint(${cp.id})">Delete</button>
+                    </td>
+                </tr>`;
+                cpSelect.innerHTML += `<option value="${cp.id}">${cp.checkpoint_name}</option>`;
+            });
+
+            // Render Lanes
+            const laneBody = document.getElementById('laneTableBody');
+            laneBody.innerHTML = '';
+            lanes.forEach(lane => {
+                laneBody.innerHTML += `<tr>
+                    <td>${lane.id}</td>
+                    <td>${lane.checkpoint_id}</td>
+                    <td>Lane ${lane.lane_number}</td>
+                    <td>
+                        <button onclick="editLane(${lane.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteLane(${lane.id})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+
+            // Render Vehicle Types
+            const vBody = document.getElementById('vehicleTableBody');
+            vBody.innerHTML = '';
+            vehicleTypes.forEach(vt => {
+                vBody.innerHTML += `<tr>
+                    <td>${vt.id}</td>
+                    <td>${vt.type_name}</td>
+                    <td>₱${parseFloat(vt.base_fee).toFixed(2)}</td>
+                    <td>
+                        <button onclick="editVehicle(${vt.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteVehicle(${vt.id})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+
+            // Render INNER JOIN Report View
+            const reportBody = document.getElementById('joinReportTableBody');
+            reportBody.innerHTML = '';
+            lanes.forEach(lane => {
+                const matchedCP = checkpoints.find(cp => cp.id == lane.checkpoint_id);
+                if (matchedCP) {
+                    reportBody.innerHTML += `<tr>
+                        <td><strong>${lane.id}</strong></td>
+                        <td>Lane ${lane.lane_number}</td>
+                        <td>${matchedCP.checkpoint_name}</td>
+                        <td><span style="color:#2980b9;">📍 ${matchedCP.location}</span></td>
+                    </tr>`;
+                }
+            });
+        }
+
+        // CONTROL OPERATIONS FOR FORM HANDLERS (ADD/EDIT PROCESSORS)
+        document.getElementById('checkpointForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('checkpointId').value;
+            const name = document.getElementById('checkpointName').value;
+            const loc = document.getElementById('checkpointLocation').value;
+            if(id) {
+                let cp = checkpoints.find(c => c.id == id);
+                cp.checkpoint_name = name; cp.location = loc;
+            } else {
+                checkpoints.push({ id: checkpoints.length + 1, checkpoint_name: name, location: loc });
+            }
+            this.reset(); document.getElementById('checkpointBtn').innerText = "Add Checkpoint";
+            renderAll();
+        });
+
+        document.getElementById('laneForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('laneId').value;
+            const cpId = document.getElementById('laneCheckpointSelect').value;
+            const num = document.getElementById('laneNumber').value;
