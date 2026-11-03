@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <main class="container">
+
+        <h1>Shift Management</h1>
+        <p>Manage personnel work shifts.</p>
+
+        <section>
+            <h2>Add Shift</h2>
+
+            <form id="shiftForm">
+                <input type="hidden" id="shiftId">
+
+                <label for="shift_name">Shift Name:</label>
+                <input type="text" id="shift_name" required>
+
+                <label for="start_time">Start Time:</label>
+                <input type="time" id="start_time" required>
+
+                <label for="end_time">End Time:</label>
+                <input type="time" id="end_time" required>
+
+                <button type="submit" id="saveButton">Add Shift</button>
+                <button type="button" id="cancelButton">Cancel</button>
+            </form>
+
+            <p id="message" role="status"></p>
+        </section>
+
+        <section>
+            <h2>Shift Records</h2>
+
+            <button type="button" id="refreshButton">Refresh</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Shift Name</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="shiftTable">
+                    <tr>
+                        <td colspan="5">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script src="../js/api.js"></script>
+
+    <script>
+        // Load shifts
+        async function loadShifts() {
+            const table = document.getElementById('shiftTable');
+            const message = document.getElementById('message');
+
+            try {
+                const result = await getShifts();
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Failed to load shifts.');
+                }
+
+                table.innerHTML = '';
+
+                if (result.data.length === 0) {
+                    table.innerHTML = '<tr><td colspan="5">No records found.</td></tr>';
+                    return;
+                }
+
+                result.data.forEach(shift => {
+                    const row = document.createElement('tr');
+
+                    const values = [
+                        shift.id,
+                        shift.shift_name,
+                        shift.start_time,
+                        shift.end_time
+                    ];
+
+                    values.forEach(value => {
+                        const cell = document.createElement('td');
+                        cell.textContent = value;
+                        row.appendChild(cell);
+                    });
+
+                    const actions = document.createElement('td');
+
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.type = 'button';
+                    editButton.onclick = () => editShift(shift);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.type = 'button';
+                    deleteButton.onclick = () => removeShift(shift.id);
+
+                    actions.append(editButton, deleteButton);
+                    row.appendChild(actions);
+                    table.appendChild(row);
+                });
+
+            } catch (error) {
+                table.innerHTML = '<tr><td colspan="5">Unable to load records.</td></tr>';
+                message.textContent = error.message;
+            }
+        }
+
+        // Add or update shift
+        document.getElementById('shiftForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('shiftId').value;
+
+            const data = {
+                shift_name: document.getElementById('shift_name').value.trim(),
+                start_time: document.getElementById('start_time').value,
+                end_time: document.getElementById('end_time').value
+            };
+
+            const message = document.getElementById('message');
+
+            if (data.start_time === data.end_time) {
+                message.textContent = 'Start time and end time cannot be the same.';
+                return;
+            }
+
+            try {
+                const result = id
+                    ? await updateShift(id, data)
+                    : await addShift(data);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to save shift.');
+                }
+
+                message.textContent = result.message;
+                resetForm();
+                loadShifts();
+
+            } catch (error) {
+                message.textContent = error.message;
+            }
+        });
+
+        // Edit shift
+        function editShift(shift) {
+            document.getElementById('shiftId').value = shift.id;
+            document.getElementById('shift_name').value = shift.shift_name;
+            document.getElementById('start_time').value = shift.start_time;
+            document.getElementById('end_time').value = shift.end_time;
+
+            document.getElementById('saveButton').textContent = 'Update Shift';
+        }
+
+        // Delete shift
+        async function removeShift(id) {
+            if (!confirm('Are you sure you want to delete this shift?')) {
+                return;
+            }
+
+            try {
+                const result = await deleteShift(id);
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Unable to delete shift.');
+                }
+
+                document.getElementById('message').textContent = result.message;
+                resetForm();
+                loadShifts();
+
+            } catch (error) {
+                document.getElementById('message').textContent = error.message;
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('shiftForm').reset();
+            document.getElementById('shiftId').value = '';
+            document.getElementById('saveButton').textContent = 'Add Shift';
+        }
+
+        // Button events
+        document.getElementById('cancelButton').onclick = resetForm;
+        document.getElementById('refreshButton').onclick = loadShifts;
+
+        // Load records when page opens
+        loadShifts();
+    </script>
+
+</body>
+</html>

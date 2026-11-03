@@ -2,38 +2,40 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-    const db = require('./config/db');
+const db = require('./config/db');
 
 const travelerRoutes = require('./routes/travelerRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const entryRecordRoutes = require('./routes/entryRecordRoutes');
 const violationRoutes = require('./routes/violationRoutes');
-const auditLogRoutes = require('./routes/auditLogRoutes');
 const alertRoutes = require('./routes/alertRoutes');
-
+const auditLogRoutes = require('./routes/auditLogRoutes');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// API routes
 app.use('/api/travelers', travelerRoutes);
-console.log('TRAVELER ROUTE REGISTERED');
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/entry-records', entryRecordRoutes);
 app.use('/api/violations', violationRoutes);
+app.use('/api/alerts', alertRoutes);
 app.use('/api/audit-logs', auditLogRoutes);
-app.use('/api/alerts', alertRoutes);    
-
+// Home route
 app.get('/', (req, res) => {
-    app.get('/test', (req, res) => {
-    res.send('TEST ROUTE IS WORKING!');
-});
     res.json({
         message: 'Border Entry Payment and Personnel Tracking System API is running!'
     });
 });
 
+// Test route
+app.get('/test', (req, res) => {
+    res.send('TEST ROUTE IS WORKING!');
+});
+
+// Check MySQL connection
 db.getConnection()
     .then(connection => {
         console.log('MySQL connected successfully!');
