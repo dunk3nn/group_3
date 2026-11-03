@@ -7,10 +7,9 @@ const db = require('./config/db');
 const travelerRoutes = require('./routes/travelerRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const entryRecordRoutes = require('./routes/entryRecordRoutes');
-const personnelRoutes = require('./routes/personnelRoutes');
-const shiftRoutes = require('./routes/shiftRoutes');
-const assignmentRoutes = require('./routes/assignmentRoutes');
-const checkpointRoutes = require('./routes/checkpointRoutes');
+const violationRoutes = require('./routes/violationRoutes');
+const alertRoutes = require('./routes/alertRoutes');
+const auditLogRoutes = require('./routes/auditLogRoutes');
 
 const app = express();
 
@@ -21,11 +20,9 @@ app.use(express.json());
 app.use('/api/travelers', travelerRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/entry-records', entryRecordRoutes);
-app.use('/api/personnel', personnelRoutes);
-app.use('/api/shifts', shiftRoutes);
-app.use('/api/assignments', assignmentRoutes);
-app.use('/api/checkpoints', checkpointRoutes);
-
+app.use('/api/violations', violationRoutes);
+app.use('/api/alerts', alertRoutes);
+app.use('/api/audit-logs', auditLogRoutes);
 // Home route
 app.get('/', (req, res) => {
     res.json({
