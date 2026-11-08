@@ -39,6 +39,6 @@ CREATE TABLE Payments (
     FOREIGN KEY (fee_rule_id) REFERENCES Fee_Rules(id),
     FOREIGN KEY (penalty_id) REFERENCES Penalties(id)
 );
-      FOREIGN KEY (penalty_id) REFERENCES Penalties(id)
-);
+      
+
 
