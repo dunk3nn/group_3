@@ -41,9 +41,12 @@
   th{background:#eaf0f5;white-space:nowrap}
   td.act{white-space:nowrap}
   .tag{display:inline-block;padding:.05rem .5rem;border-radius:10px;font-size:.78rem;background:#e6ebf0}
-  .tag.High,.tag.Critical,.tag.Open,.tag.Active{background:#fbe3e1;color:var(--danger)}
-  .tag.Medium,.tag.Under\ Review,.tag.Acknowledged{background:#fdf0d8;color:var(--warn)}
-  .tag.Resolved,.tag.Low{background:#dff2e6;color:var(--ok)}
+  .tag{text-transform:capitalize}
+  .tag.Unread{background:#fdf0d8;color:var(--warn)}
+  .tag.Read{background:#dff2e6;color:var(--ok)}
+  .tag.High,.tag.Critical,.tag.Open,.tag.Active,.tag.high,.tag.critical,.tag.open,.tag.active{background:#fbe3e1;color:var(--danger)}
+  .tag.Medium,.tag.Acknowledged,.tag.medium,.tag.acknowledged{background:#fdf0d8;color:var(--warn)}
+  .tag.Resolved,.tag.Low,.tag.resolved,.tag.low{background:#dff2e6;color:var(--ok)}
   .empty{color:var(--muted);text-align:center;padding:1rem}
   #toast{position:fixed;right:1rem;bottom:1rem;max-width:90vw;padding:.7rem 1rem;border-radius:4px;color:#fff;display:none;z-index:9}
   #toast.ok{background:var(--ok)} #toast.bad{background:var(--danger)}
@@ -89,14 +92,13 @@
       <h2 id="vTitle">Add violation</h2>
       <form id="vForm" class="grid" novalidate>
         <input type="hidden" name="id">
-        <label>Entry ID (optional)<input name="entry_id" type="number" min="1"><span class="err"></span></label>
-        <label>Violation type *<input name="violation_type" maxlength="80" required><span class="err"></span></label>
+        <label>Entry record ID *<input name="entry_records_id" type="number" min="1" required><span class="err"></span></label>
+        <label>Violation type *<input name="violation_type" maxlength="100" required><span class="err"></span></label>
         <label>Severity *
-          <select name="severity" required><option value="">Select…</option><option>Low</option><option>Medium</option><option>High</option></select><span class="err"></span></label>
+          <select name="severity" required><option value="">Select…</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select><span class="err"></span></label>
         <label>Status *
-          <select name="status" required><option>Open</option><option>Under Review</option><option>Resolved</option></select><span class="err"></span></label>
-        <label>Date recorded *<input name="violation_date" type="date" required><span class="err"></span></label>
-        <label class="full">Description *<textarea name="description" rows="3" maxlength="500" required></textarea><span class="err"></span></label>
+          <select name="status" required><option value="open">Open</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select><span class="err"></span></label>
+        <label class="full">Description<textarea name="description" rows="3" maxlength="500"></textarea><span class="err"></span></label>
         <div class="row full">
           <button class="btn" type="submit">Save violation</button>
           <button class="btn alt" type="button" data-reset="vForm">Clear form</button>
@@ -106,7 +108,7 @@
     <div class="panel">
       <h2>Violation records</h2>
       <div class="loading" id="vLoad">Loading violations…</div>
-      <div class="scroll"><table><thead><tr><th>ID</th><th>Entry</th><th>Type</th><th>Severity</th><th>Status</th><th>Date</th><th>Description</th><th>Actions</th></tr></thead><tbody id="vBody"></tbody></table></div>
+      <div class="scroll"><table><thead><tr><th>ID</th><th>Entry record</th><th>Type</th><th>Severity</th><th>Status</th><th>Recorded</th><th>Description</th><th>Actions</th></tr></thead><tbody id="vBody"></tbody></table></div>
     </div>
   </section>
 
@@ -116,12 +118,11 @@
       <h2 id="aTitle">Add alert</h2>
       <form id="aForm" class="grid" novalidate>
         <input type="hidden" name="id">
-        <label>Violation ID (optional)<input name="violation_id" type="number" min="1"><span class="err"></span></label>
-        <label>Alert type *<input name="alert_type" maxlength="80" required><span class="err"></span></label>
-        <label>Level *
-          <select name="level" required><option value="">Select…</option><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select><span class="err"></span></label>
+        <label>Violation ID (optional)<input name="violations_id" type="number" min="1"><span class="err"></span></label>
+        <label>Checkpoint ID (optional)<input name="checkpoints_id" type="number" min="1"><span class="err"></span></label>
+        <label>Alert type *<input name="alert_type" maxlength="100" required><span class="err"></span></label>
         <label>Status *
-          <select name="status" required><option>Active</option><option>Acknowledged</option><option>Resolved</option></select><span class="err"></span></label>
+          <select name="is_read" required><option value="0">Unread</option><option value="1">Read</option></select><span class="err"></span></label>
         <label class="full">Message *<textarea name="message" rows="3" maxlength="500" required></textarea><span class="err"></span></label>
         <div class="row full">
           <button class="btn" type="submit">Save alert</button>
@@ -132,7 +133,7 @@
     <div class="panel">
       <h2>Alert records</h2>
       <div class="loading" id="aLoad">Loading alerts…</div>
-      <div class="scroll"><table><thead><tr><th>ID</th><th>Violation</th><th>Type</th><th>Level</th><th>Status</th><th>Message</th><th>Actions</th></tr></thead><tbody id="aBody"></tbody></table></div>
+      <div class="scroll"><table><thead><tr><th>ID</th><th>Violation</th><th>Checkpoint</th><th>Type</th><th>Status</th><th>Message</th><th>Created</th><th>Actions</th></tr></thead><tbody id="aBody"></tbody></table></div>
     </div>
   </section>
 
@@ -145,7 +146,7 @@
         <button class="btn alt" id="auditRefresh" type="button">Refresh</button>
       </div>
       <div class="loading" id="lLoad">Loading audit log…</div>
-      <div class="scroll"><table><thead><tr><th>ID</th><th>Time</th><th>User</th><th>Action</th><th>Table</th><th>Record</th><th>Details</th></tr></thead><tbody id="lBody"></tbody></table></div>
+      <div class="scroll"><table><thead><tr><th>ID</th><th>Time</th><th>User ID</th><th>Action</th><th>Table</th><th>Record</th><th>Details</th></tr></thead><tbody id="lBody"></tbody></table></div>
     </div>
   </section>
 
@@ -155,7 +156,7 @@
       <h2>Violations with their entry records (LEFT JOIN)</h2>
       <p class="sub">Every violation is listed. Violations with no linked entry show “No entry linked”.</p>
       <div class="loading" id="rLoad">Loading report…</div>
-      <div class="scroll"><table><thead><tr><th>Violation ID</th><th>Type</th><th>Severity</th><th>Status</th><th>Entry ID</th><th>Entry time</th><th>Traveler</th><th>Vehicle plate</th></tr></thead><tbody id="rBody"></tbody></table></div>
+      <div class="scroll"><table><thead><tr><th>Violation ID</th><th>Type</th><th>Severity</th><th>Status</th><th>Entry ID</th><th>Entry date &amp; time</th><th>Traveler</th><th>Vehicle plate</th></tr></thead><tbody id="rBody"></tbody></table></div>
     </div>
   </section>
 </main>
@@ -176,7 +177,7 @@ const ENDPOINTS = {
   violations: '/violations',
   alerts: '/alerts',
   audit: '/audit-logs',
-  report: '/reports/violations-entries'
+  report: '/violations/report/with-entries'
 };
 const API_BASE = (window.API_BASE || 'http://localhost:3000/api');
 
@@ -287,7 +288,7 @@ function crud(cfg) {
     } catch (e) { toast('Could not save ' + cfg.noun + '. ' + e.message, false); }
     finally { btn.disabled = false; }
   });
-  document.querySelector(`[data-reset=${form.id}]`).addEventListener('click', () => resetForm(form, cfg.title, cfg.addLabel));
+  document.querySelector('[data-reset="' + form.getAttribute('id') + '"]').addEventListener('click', () => resetForm(form, cfg.title, cfg.addLabel));
   $(cfg.body).addEventListener('click', async ev => {
     const b = ev.target.closest('button[data-act]'); if (!b) return;
     const rec = cache.find(r => String(r.id) === b.dataset.id); if (!rec) return;
@@ -304,21 +305,21 @@ const actions = id => `<td class="act"><button class="btn alt sm" data-act="edit
 const loadViolations = crud({
   form: '#vForm', title: '#vTitle', addLabel: 'Add violation', noun: 'violation', url: ENDPOINTS.violations,
   body: '#vBody', load: '#vLoad', cols: 8,
-  row: r => `<tr><td>${esc(r.id)}</td><td>${esc(r.entry_id) || '—'}</td><td>${esc(r.violation_type)}</td><td>${tag(r.severity)}</td><td>${tag(r.status)}</td><td>${esc(fmtDate(r.violation_date))}</td><td>${esc(r.description)}</td>${actions(r.id)}</tr>`
+  row: r => `<tr><td>${esc(r.id)}</td><td>${esc(r.entry_records_id) || '—'}</td><td>${esc(r.violation_type)}</td><td>${tag(r.severity)}</td><td>${tag(r.status)}</td><td>${esc(fmtDate(r.recorded_at))}</td><td>${esc(r.description)}</td>${actions(r.id)}</tr>`
 });
 const loadAlerts = crud({
   form: '#aForm', title: '#aTitle', addLabel: 'Add alert', noun: 'alert', url: ENDPOINTS.alerts,
-  body: '#aBody', load: '#aLoad', cols: 7,
-  row: r => `<tr><td>${esc(r.id)}</td><td>${esc(r.violation_id) || '—'}</td><td>${esc(r.alert_type)}</td><td>${tag(r.level)}</td><td>${tag(r.status)}</td><td>${esc(r.message)}</td>${actions(r.id)}</tr>`
+  body: '#aBody', load: '#aLoad', cols: 8,
+  row: r => `<tr><td>${esc(r.id)}</td><td>${esc(r.violations_id) || '—'}</td><td>${esc(r.checkpoints_id) || '—'}</td><td>${esc(r.alert_type)}</td><td>${tag(r.is_read ? 'Read' : 'Unread')}</td><td>${esc(r.message)}</td><td>${esc(fmtTime(r.created_at))}</td>${actions(r.id)}</tr>`
 });
 
 /* ---------- Audit log (read-only) ---------- */
 let auditCache = [];
 function drawAudit() {
   const q = $('#auditFilter').value.trim().toLowerCase();
-  const list = auditCache.filter(r => !q || [r.username, r.user, r.action, r.table_name].some(v => String(v ?? '').toLowerCase().includes(q)));
+  const list = auditCache.filter(r => !q || [r.users_id, r.action, r.table_name].some(v => String(v ?? '').toLowerCase().includes(q)));
   $('#lBody').innerHTML = list.length
-    ? list.map(r => `<tr><td>${esc(r.id)}</td><td>${esc(fmtTime(r.created_at || r.timestamp))}</td><td>${esc(r.username || r.user || r.user_id)}</td><td>${esc(r.action)}</td><td>${esc(r.table_name)}</td><td>${esc(r.record_id)}</td><td>${esc(r.details || r.description)}</td></tr>`).join('')
+    ? list.map(r => `<tr><td>${esc(r.id)}</td><td>${esc(fmtTime(r.created_at || r.timestamp))}</td><td>${esc(r.users_id)}</td><td>${esc(r.action)}</td><td>${esc(r.table_name)}</td><td>${esc(r.record_id)}</td><td>${esc(r.details || r.description)}</td></tr>`).join('')
     : '<tr><td class="empty" colspan="7">No audit entries match.</td></tr>';
 }
 async function loadAudit() {
@@ -337,7 +338,7 @@ async function loadReport() {
     const list = rows(await request('GET', ENDPOINTS.report));
     $('#rBody').innerHTML = list.length
       ? list.map(r => `<tr><td>${esc(r.violation_id ?? r.id)}</td><td>${esc(r.violation_type)}</td><td>${tag(r.severity)}</td><td>${tag(r.status)}</td>` +
-          (r.entry_id ? `<td>${esc(r.entry_id)}</td><td>${esc(fmtTime(r.entry_time))}</td><td>${esc(r.traveler_name)}</td><td>${esc(r.plate_number)}</td>`
+          (r.entry_id ? `<td>${esc(r.entry_id)}</td><td>${esc((fmtDate(r.entry_date) + ' ' + (r.entry_time || '')).trim())}</td><td>${esc(r.traveler_name)}</td><td>${esc(r.plate_number)}</td>`
                       : `<td colspan="4" class="empty" style="text-align:left">No entry linked</td>`) + '</tr>').join('')
       : '<tr><td class="empty" colspan="8">No violations to report on yet.</td></tr>';
   } catch (e) { $('#rBody').innerHTML = `<tr><td class="empty" colspan="8">Could not load the report: ${esc(e.message)}</td></tr>`; toast('Could not load the report. ' + e.message, false); }
