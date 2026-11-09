@@ -12,6 +12,10 @@ const violationRoutes = require('./routes/violationRoutes');
 const alertRoutes = require('./routes/alertRoutes');
 const auditLogRoutes = require('./routes/auditLogRoutes');
 const userRoutes = require('./routes/userRoutes');
+const personnelRoutes = require('./routes/personnelRoutes');
+const shiftRoutes = require('./routes/shiftRoutes');
+const assignmentRoutes = require('./routes/assignmentRoutes');
+const checkpointRoutes = require('./routes/checkpointRoutes');
 
 const app = express();
 app.use(cors());
@@ -25,6 +29,11 @@ app.use('/api/violations', violationRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/audit-logs', auditLogRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/personnel', personnelRoutes);
+app.use('/api/shifts', shiftRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/checkpoints', checkpointRoutes);
+
 // Home route
 app.get('/', (req, res) => {
     res.json({
