@@ -38,12 +38,3 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     FOREIGN KEY (users_id) REFERENCES users(id)
 );
 
--- Sample data (needs entry_records id 1, checkpoints id 1 and users id 1 to exist)
-INSERT INTO violations (entry_records_id, violation_type, description, severity)
-VALUES (1, 'Overstay', 'Test violation', 'high');
-
-INSERT INTO alerts (violations_id, checkpoints_id, alert_type, message)
-VALUES (1, 1, 'High severity', 'Test alert');
-
-INSERT INTO audit_logs (users_id, action, table_name, record_id, details)
-VALUES (1, 'CREATE', 'violations', 1, 'Test audit log');
