@@ -4,72 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fee Rules Management</title>
-    <!-- Link to your project's main stylesheet -->
-    <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
-        .table-container { margin-top: 20px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #f4f4f9; font-weight: bold; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-        .badge-active { background: #e6fffa; color: #047857; }
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); padding: 24px; }
+        
+        .header { margin-bottom: 24px; }
+        .header h2 { font-size: 1.5rem; font-weight: 700; }
+        .header p { color: var(--text-muted); font-size: 0.875rem; margin-top: 4px; }
+
+        .layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+
+        .card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border); padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); outline: none; font-size: 0.9rem; transition: border 0.2s; }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .btn-primary { width: 100%; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+        .btn-primary:hover { background: var(--primary-hover); }
+
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th { background: #f1f5f9; padding: 12px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
+        tbody tr:hover { background: #f8fafc; }
+        
+        .empty-state { text-align: center; color: var(--text-muted); padding: 20px; }
     </style>
 </head>
 <body>
 
-    <h2>Fee Rules Management</h2>
-    <p>Manage border system fee rules, rates, and criteria here.</p>
+    <div class="header">
+        <h2>Fee Rules Management</h2>
+        <p>Configure standard base rates and charges by vehicle classification.</p>
+    </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Rule Name</th>
-                    <th>Vehicle Type</th>
-                    <th>Fee Amount</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody id="fee-rules-list">
-                <tr>
-                    <td colspan="5">Loading fee rules from backend...</td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="layout-grid">
+        <!-- Add Form -->
+        <div class="card">
+            <h3>Add New Rule</h3>
+            <form id="feeRuleForm">
+                <div class="form-group">
+                    <label>Vehicle Type</label>
+                    <input type="text" id="vehicle_type" placeholder="e.g. SUV, Truck, Motorcycle" required>
+                </div>
+                <div class="form-group">
+                    <label>Base Fee (₱)</label>
+                    <input type="number" step="0.01" id="base_fee" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="description" placeholder="Standard entry fee details">
+                </div>
+                <button type="submit" class="btn-primary">Save Fee Rule</button>
+            </form>
+        </div>
+
+        <!-- Table View -->
+        <div class="card">
+            <h3>Active Fee Rules</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Vehicle Type</th>
+                            <th>Base Fee</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feeRulesTable">
+                        <tr><td colspan="4" class="empty-state">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Fetch fee rules from Node backend on port 3000
-        async function loadFeeRules() {
+        async function fetchRules() {
             try {
-                const response = await fetch('http://localhost:3000/api/fee-rules');
-                if (!response.ok) throw new Error('Network response was not ok');
-                const rules = await response.json();
-                
-                const tbody = document.getElementById('fee-rules-list');
-                if (rules.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5">No fee rules found.</td></tr>';
+                const res = await fetch('http://localhost:3000/api/fee-rules');
+                const data = await res.json();
+                const tbody = document.getElementById('feeRulesTable');
+                if (!data.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No fee rules registered yet.</td></tr>';
                     return;
                 }
-
-                tbody.innerHTML = rules.map(rule => `
+                tbody.innerHTML = data.map(r => `
                     <tr>
-                        <td>${rule.id || '-'}</td>
-                        <td>${rule.name || rule.rule_name || 'Standard Fee'}</td>
-                        <td>${rule.vehicle_type || 'All'}</td>
-                        <td>₱${parseFloat(rule.amount || rule.rate || 0).toFixed(2)}</td>
-                        <td><span class="badge badge-active">Active</span></td>
+                        <td><strong>#${r.id}</strong></td>
+                        <td>${r.vehicle_type}</td>
+                        <td>₱${parseFloat(r.base_fee || 0).toFixed(2)}</td>
+                        <td style="color: var(--text-muted);">${r.description || '—'}</td>
                     </tr>
                 `).join('');
             } catch (err) {
-                document.getElementById('fee-rules-list').innerHTML = 
-                    '<tr><td colspan="5" style="color: red;">Failed to load fee rules. Is the Node backend running on port 3000?</td></tr>';
+                document.getElementById('feeRulesTable').innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Failed to load fee rules. Ensure Node backend is active.</td></tr>';
             }
         }
-
-        loadFeeRules();
+        fetchRules();
     </script>
 </body>
 </html>
