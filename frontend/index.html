@@ -1,71 +1,133 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Border Entry System</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .container {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-
-        .section {
-            flex: 1;
-            min-width: 0;
-        }
-
-        iframe {
-            width: 100%;
-            height: 650px;
-            border: 1px solid gray;
-        }
-
-        @media (max-width: 800px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .section {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
-
 <body>
 
-    <h1>Border Entry Payment and Personnel Tracking System</h1>
+<div class="dashboard-layout">
 
-    <hr>
+    <aside class="sidebar">
 
-    <div class="container">
-
-        <div class="section">
-            <h2>Personnel Management</h2>
-            <iframe src="pages/personnel.html"></iframe>
+        <div class="sidebar-brand">
+            <h2>Border Entry System</h2>
+            <p>Payment & Personnel Tracking</p>
         </div>
 
-        <div class="section">
-            <h2>Shift Management</h2>
-            <iframe src="pages/shifts.html"></iframe>
+        <div class="sidebar-section">
+            <h4>MAIN MENU</h4>
+            <a href="/frontend/" class="active">Dashboard</a>
         </div>
 
-        <div class="section">
-            <h2>Checkpoint Assignment Management</h2>
-            <iframe src="pages/assignments.html"></iframe>
+        <div class="sidebar-section">
+            <h4>BORDER OPERATIONS</h4>
+            <a href="/php/travelers.php">Travelers</a>
+            <a href="/php/vehicles.php">Vehicles</a>
+            <a href="/php/entry_records.php">Entry Records</a>
+            <a href="/php/kyfer/checkpoints.php">Checkpoints</a>
+            <a href="/php/kyfer/lanes.php">Lanes</a>
+            <a href="/php/kyfer/vehicle_types.php">Vehicle Types</a>
         </div>
 
-    </div>
+        <div class="sidebar-section">
+            <h4>PAYMENT MANAGEMENT</h4>
+            <a href="/php/kenn/fee_rules.php">Fee Rules</a>
+            <a href="/frontend/pages/penalties.html">Penalties</a>
+            <a href="/frontend/pages/payments.html">Payments</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>PERSONNEL MANAGEMENT</h4>
+            <a href="/personnel/index.php">Personnel</a>
+            <a href="/shifts/index.php">Shifts</a>
+            <a href="/php/dave/assignments.php">Checkpoint Assignments</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>SYSTEM MANAGEMENT</h4>
+            <a href="/php/albert/users.php">Users & Roles</a>
+            <a href="/php/michael/violations.php">Violations</a>
+            <a href="/php/michael/alerts.php">Alerts</a>
+            <a href="/php/michael/audit_logs.php">Audit Logs</a>
+            <a href="/php/entry_report.php">Reports</a>
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <h3>Dashboard</h3>
+            <p>Border Entry Management System</p>
+        </header>
+
+        <div class="content">
+
+            <section class="welcome-section">
+                <h1>Welcome to Border Entry System</h1>
+                <p>
+                    Manage border operations, payments, and personnel
+                    in one place.
+                </p>
+            </section>
+
+            <section class="summary-grid">
+
+                <div class="summary-card">
+                    <p>Total Travelers</p>
+                    <h2>—</h2>
+                </div>
+
+                <div class="summary-card">
+                    <p>Registered Vehicles</p>
+                    <h2>—</h2>
+                </div>
+
+                <div class="summary-card">
+                    <p>Total Personnel</p>
+                    <h2>—</h2>
+                </div>
+
+                <div class="summary-card">
+                    <p>Entry Records</p>
+                    <h2>—</h2>
+                </div>
+
+            </section>
+
+            <section class="dashboard-panel">
+                <h3>System Overview</h3>
+                <p>
+                    This system helps manage traveler information,
+                    vehicle entries, payment transactions, and
+                    personnel assignments.
+                </p>
+            </section>
+
+            <section class="dashboard-panel">
+
+                <h3>Quick Access</h3>
+
+                <div class="quick-links">
+                    <a href="/php/travelers.php" class="quick-link">Traveler Management</a>
+                    <a href="/php/vehicles.php" class="quick-link">Vehicle Management</a>
+                    <a href="/php/entry_records.php" class="quick-link">Entry Records</a>
+                    <a href="/frontend/pages/payments.html" class="quick-link">Payment Management</a>
+                    <a href="/personnel/index.php" class="quick-link">Personnel Management</a>
+                    <a href="/php/dave/assignments.php" class="quick-link">Checkpoint Assignments</a>
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
 
 </body>
 </html>
+
