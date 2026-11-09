@@ -4,9 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fee Rules Management</title>
+    <!-- Link to your project's main stylesheet -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; color: #333; }
+        .table-container { margin-top: 20px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f4f4f9; font-weight: bold; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .badge-active { background: #e6fffa; color: #047857; }
+    </style>
 </head>
 <body>
-    <h1>Fee Rules</h1>
-    <p>Manage border system fee rules and rates here.</p>
+
+    <h2>Fee Rules Management</h2>
+    <p>Manage border system fee rules, rates, and criteria here.</p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Rule Name</th>
+                    <th>Vehicle Type</th>
+                    <th>Fee Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="fee-rules-list">
+                <tr>
+                    <td colspan="5">Loading fee rules from backend...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Fetch fee rules from Node backend on port 3000
+        async function loadFeeRules() {
+            try {
+                const response = await fetch('http://localhost:3000/api/fee-rules');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const rules = await response.json();
+                
+                const tbody = document.getElementById('fee-rules-list');
+                if (rules.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">No fee rules found.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = rules.map(rule => `
+                    <tr>
+                        <td>${rule.id || '-'}</td>
+                        <td>${rule.name || rule.rule_name || 'Standard Fee'}</td>
+                        <td>${rule.vehicle_type || 'All'}</td>
+                        <td>₱${parseFloat(rule.amount || rule.rate || 0).toFixed(2)}</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                document.getElementById('fee-rules-list').innerHTML = 
+                    '<tr><td colspan="5" style="color: red;">Failed to load fee rules. Is the Node backend running on port 3000?</td></tr>';
+            }
+        }
+
+        loadFeeRules();
+    </script>
 </body>
 </html>
