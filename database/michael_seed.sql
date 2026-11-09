@@ -15,8 +15,11 @@ VALUES (1, 'Overstay', 'Test violation', 'high');
 INSERT INTO alerts (violations_id, checkpoints_id, alert_type, message)
 VALUES (1, 1, 'High severity', 'Test alert');
 
-INSERT INTO users (role_id, username, password)
-VALUES (1, 'test_admin', 'test123');
+INSERT IGNORE INTO roles (role_name, description)
+VALUES ('Admin', 'Administrator');
+
+INSERT IGNORE INTO users (role_id, username, email, password)
+VALUES ((SELECT id FROM roles WHERE role_name = 'Admin'), 'test_admin', 'test_admin@example.com', 'test123');
 
 INSERT INTO audit_logs (users_id, action, table_name, record_id, details)
 VALUES (1, 'CREATE', 'violations', 1, 'Test audit log');
