@@ -3,72 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Transactions</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Penalties Management</title>
+    <style>
+        :root {
+            --primary: #dc2626;
+            --primary-hover: #b91c1c;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); padding: 24px; }
+        
+        .header { margin-bottom: 24px; }
+        .header h2 { font-size: 1.5rem; font-weight: 700; }
+        .header p { color: var(--text-muted); font-size: 0.875rem; margin-top: 4px; }
+
+        .layout-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+
+        .card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border); padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); outline: none; font-size: 0.9rem; transition: border 0.2s; }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+
+        .btn-danger { width: 100%; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
+        .btn-danger:hover { background: var(--primary-hover); }
+
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+        th { background: #f1f5f9; padding: 12px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); }
+        tbody tr:hover { background: #f8fafc; }
+
+        .empty-state { text-align: center; color: var(--text-muted); padding: 20px; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Payment Transactions</h1>
 
-        <!-- Process Payment Form -->
-        <section class="form-section">
-            <h2>Process New Payment</h2>
-            <form id="payment-form">
-                <div class="form-group">
-                    <label for="entry-record">Entry Record ID:</label>
-                    <input type="number" id="entry-record" name="entry_record_id" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="fee-rule">Fee Rule ID:</label>
-                    <input type="number" id="fee-rule" name="fee_rule_id" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="penalty-id">Penalty ID (Optional):</label>
-                    <input type="number" id="penalty-id" name="penalty_id" placeholder="Leave blank if none">
-                </div>
-
-                <div class="form-group">
-                    <label for="amount-paid">Amount Paid ($):</label>
-                    <input type="number" id="amount-paid" name="amount_paid" step="0.01" min="0.01" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="payment-method">Payment Method:</label>
-                    <select id="payment-method" name="payment_method" required>
-                        <option value="Cash">Cash</option>
-                        <option value="Credit Card">Credit Card</option>
-                        <option value="Debit Card">Debit Card</option>
-                        <option value="Mobile Payment">Mobile Payment</option>
-                    </select>
-                </div>
-
-                <button type="submit">Submit Payment</button>
-            </form>
-        </section>
-
-        <!-- Payments Log Table -->
-        <section class="table-section">
-            <h2>Recent Payments</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Record ID</th>
-                        <th>Fee Rule</th>
-                        <th>Penalty ID</th>
-                        <th>Amount Paid</th>
-                        <th>Payment Method</th>
-                        <th>Date & Time</th>
-                    </tr>
-                </thead>
-                <tbody id="payments-list">
-                    <!-- Loaded dynamically from db -->
-                </tbody>
-            </table>
-        </section>
+    <div class="header">
+        <h2>Penalties Management</h2>
+        <p>Define fine structures and violation penalties for border infringements.</p>
     </div>
-    <script src="../js/payments.js"></script>
+
+    <div class="layout-grid">
+        <!-- Add Form -->
+        <div class="card">
+            <h3>Add New Penalty</h3>
+            <form id="penaltyForm">
+                <div class="form-group">
+                    <label>Violation Type</label>
+                    <input type="text" id="violation_type" placeholder="e.g. Overweight, Invalid Permit" required>
+                </div>
+                <div class="form-group">
+                    <label>Penalty Amount (₱)</label>
+                    <input type="number" step="0.01" id="penalty_amount" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="description" placeholder="Violation rules and terms">
+                </div>
+                <button type="submit" class="btn-danger">Save Penalty Rule</button>
+            </form>
+        </div>
+
+        <!-- Table View -->
+        <div class="card">
+            <h3>Configured Penalties</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Violation Type</th>
+                            <th>Fine Amount</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="penaltiesTable">
+                        <tr><td colspan="4" class="empty-state">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchPenalties() {
+            try {
+                const res = await fetch('http://localhost:3000/api/penalties');
+                const data = await res.json();
+                const tbody = document.getElementById('penaltiesTable');
+                if (!data.length) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No penalty rules registered yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(p => `
+                    <tr>
+                        <td><strong>#${p.id}</strong></td>
+                        <td>${p.violation_type}</td>
+                        <td style="color: #dc2626; font-weight: 600;">₱${parseFloat(p.amount || 0).toFixed(2)}</td>
+                        <td style="color: var(--text-muted);">${p.description || '—'}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                document.getElementById('penaltiesTable').innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Failed to load penalties. Ensure Node backend is active.</td></tr>';
+            }
+        }
+        fetchPenalties();
+    </script>
 </body>
 </html>
