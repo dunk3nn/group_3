@@ -1,6 +1,6 @@
-
+```php
 <?php
-require_once '../db.php';
+require_once __DIR__ . '/../../db.php';
 
 $conn->set_charset("utf8mb4");
 
@@ -29,14 +29,21 @@ $sql = "
 $result = $conn->query($sql);
 
 function clean($value) {
-    return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
+    return htmlspecialchars(
+        (string)$value,
+        ENT_QUOTES,
+        "UTF-8"
+    );
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Entry Report</title>
 
     <style>
@@ -92,6 +99,14 @@ function clean($value) {
             cursor: pointer;
         }
 
+        .print-btn:hover {
+            background: #12558a;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
         @media print {
             .print-btn {
                 display: none;
@@ -100,6 +115,11 @@ function clean($value) {
             body {
                 background: white;
                 padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+                box-shadow: none;
             }
         }
     </style>
@@ -120,58 +140,70 @@ function clean($value) {
         Print Report
     </button>
 
-    <table>
-        <tr>
-            <th>Entry ID</th>
-            <th>Traveler Name</th>
-            <th>Vehicle</th>
-            <th>Plate Number</th>
-            <th>Checkpoint</th>
-            <th>Entry Date</th>
-            <th>Entry Time</th>
-            <th>Purpose</th>
-        </tr>
+    <div class="table-wrapper">
 
-        <?php if ($result->num_rows > 0): ?>
-
-            <?php while ($row = $result->fetch_assoc()): ?>
-
-                <tr>
-                    <td><?= clean($row["id"]) ?></td>
-
-                    <td>
-                        <?= clean($row["first_name"] . " " .
-                            $row["last_name"]) ?>
-                    </td>
-
-                    <td><?= clean($row["vehicle_name"]) ?></td>
-
-                    <td><?= clean($row["plate_number"]) ?></td>
-
-                    <td>
-                        <?= clean($row["checkpoint_name"] ?? "Not assigned") ?>
-                    </td>
-
-                    <td><?= clean($row["entry_date"]) ?></td>
-
-                    <td><?= clean($row["entry_time"]) ?></td>
-
-                    <td><?= clean($row["purpose"]) ?></td>
-                </tr>
-
-            <?php endwhile; ?>
-
-        <?php else: ?>
+        <table>
 
             <tr>
-                <td colspan="8">No entry records found.</td>
+                <th>Entry ID</th>
+                <th>Traveler Name</th>
+                <th>Vehicle</th>
+                <th>Plate Number</th>
+                <th>Checkpoint</th>
+                <th>Entry Date</th>
+                <th>Entry Time</th>
+                <th>Purpose</th>
             </tr>
 
-        <?php endif; ?>
+            <?php if ($result->num_rows > 0): ?>
 
-    </table>
+                <?php while ($row = $result->fetch_assoc()): ?>
+
+                    <tr>
+
+                        <td><?= clean($row["id"]) ?></td>
+
+                        <td>
+                            <?= clean(
+                                $row["first_name"] . " " .
+                                $row["last_name"]
+                            ) ?>
+                        </td>
+
+                        <td><?= clean($row["vehicle_name"]) ?></td>
+
+                        <td><?= clean($row["plate_number"]) ?></td>
+
+                        <td>
+                            <?= clean(
+                                $row["checkpoint_name"] ?? "Not assigned"
+                            ) ?>
+                        </td>
+
+                        <td><?= clean($row["entry_date"]) ?></td>
+
+                        <td><?= clean($row["entry_time"]) ?></td>
+
+                        <td><?= clean($row["purpose"]) ?></td>
+
+                    </tr>
+
+                <?php endwhile; ?>
+
+            <?php else: ?>
+
+                <tr>
+                    <td colspan="8">No entry records found.</td>
+                </tr>
+
+            <?php endif; ?>
+
+        </table>
+
+    </div>
 
 </div>
 
 </body>
 </html>
+```

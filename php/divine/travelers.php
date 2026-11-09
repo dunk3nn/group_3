@@ -1,6 +1,6 @@
-
+```php
 <?php
-require_once '../db.php';
+require_once __DIR__ . '/../../db.php';
 
 $conn->set_charset("utf8mb4");
 
@@ -8,6 +8,7 @@ $message = "";
 
 // ADD OR UPDATE TRAVELER
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
     $action = $_POST["action"] ?? "";
 
     $first_name = trim($_POST["first_name"] ?? "");
@@ -15,60 +16,97 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $contact_number = trim($_POST["contact_number"] ?? "");
 
     if ($action === "save") {
+
         if ($first_name === "" || $last_name === "" || $contact_number === "") {
+
             $message = "Please complete all fields.";
+
         } else {
+
             $id = (int)($_POST["id"] ?? 0);
 
-            if ($id > 0) {
-                $stmt = $conn->prepare(
-                    "UPDATE travelers
-                     SET first_name = ?, last_name = ?, contact_number = ?
-                     WHERE id = ?"
-                );
-                $stmt->bind_param(
-                    "sssi",
-                    $first_name,
-                    $last_name,
-                    $contact_number,
-                    $id
-                );
-                $stmt->execute();
-                $message = "Traveler updated successfully!";
-            } else {
-                $stmt = $conn->prepare(
-                    "INSERT INTO travelers
-                     (first_name, last_name, contact_number)
-                     VALUES (?, ?, ?)"
-                );
-                $stmt->bind_param(
-                    "sss",
-                    $first_name,
-                    $last_name,
-                    $contact_number
-                );
-                $stmt->execute();
-                $message = "Traveler added successfully!";
-            }
+            try {
 
-            $stmt->close();
+                if ($id > 0) {
+
+                    $stmt = $conn->prepare(
+                        "UPDATE travelers
+                         SET first_name = ?, last_name = ?, contact_number = ?
+                         WHERE id = ?"
+                    );
+
+                    $stmt->bind_param(
+                        "sssi",
+                        $first_name,
+                        $last_name,
+                        $contact_number,
+                        $id
+                    );
+
+                    $stmt->execute();
+
+                    $message = "Traveler updated successfully!";
+
+                } else {
+
+                    $stmt = $conn->prepare(
+                        "INSERT INTO travelers
+                         (first_name, last_name, contact_number)
+                         VALUES (?, ?, ?)"
+                    );
+
+                    $stmt->bind_param(
+                        "sss",
+                        $first_name,
+                        $last_name,
+                        $contact_number
+                    );
+
+                    $stmt->execute();
+
+                    $message = "Traveler added successfully!";
+                }
+
+                $stmt->close();
+
+            } catch (mysqli_sql_exception $e) {
+
+                error_log($e->getMessage());
+
+                $message = "Unable to save traveler. Please check the database fields and try again.";
+
+            }
         }
     }
 
     // DELETE TRAVELER
     if ($action === "delete") {
+
         $id = (int)($_POST["id"] ?? 0);
 
-        try {
-            $stmt = $conn->prepare(
-                "DELETE FROM travelers WHERE id = ?"
-            );
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
-            $message = "Traveler deleted successfully!";
-            $stmt->close();
-        } catch (mysqli_sql_exception $e) {
-            $message = "Cannot delete this traveler because they may have related vehicle or entry records.";
+        if ($id > 0) {
+
+            try {
+
+                $stmt = $conn->prepare(
+                    "DELETE FROM travelers WHERE id = ?"
+                );
+
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+
+                $message = "Traveler deleted successfully!";
+
+                $stmt->close();
+
+            } catch (mysqli_sql_exception $e) {
+
+                error_log($e->getMessage());
+
+                $message = "Cannot delete this traveler because they may have related vehicle or entry records.";
+
+            }
+
         }
     }
 }
@@ -77,18 +115,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $edit_traveler = null;
 
 if (isset($_GET["edit"])) {
+
     $id = (int)$_GET["edit"];
 
-    $stmt = $conn->prepare(
-        "SELECT * FROM travelers WHERE id = ?"
-    );
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+    if ($id > 0) {
 
-    $result = $stmt->get_result();
-    $edit_traveler = $result->fetch_assoc();
+        $stmt = $conn->prepare(
+            "SELECT * FROM travelers WHERE id = ?"
+        );
 
-    $stmt->close();
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $result_edit = $stmt->get_result();
+
+        $edit_traveler = $result_edit->fetch_assoc();
+
+        $stmt->close();
+    }
 }
 
 // DISPLAY ALL TRAVELERS
@@ -96,6 +140,7 @@ $result = $conn->query(
     "SELECT * FROM travelers ORDER BY id DESC"
 );
 
+// ESCAPE OUTPUT
 function clean($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
@@ -103,9 +148,13 @@ function clean($value) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Travelers Management</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -138,6 +187,7 @@ function clean($value) {
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
+            display: inline-block;
         }
 
         button {
@@ -180,8 +230,30 @@ function clean($value) {
         form.inline {
             display: inline;
         }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cancel {
+            margin-left: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 650px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -197,6 +269,7 @@ function clean($value) {
     </h2>
 
     <form method="POST">
+
         <input type="hidden" name="action" value="save">
 
         <input
@@ -206,6 +279,7 @@ function clean($value) {
         >
 
         <label>First Name</label>
+
         <input
             type="text"
             name="first_name"
@@ -214,6 +288,7 @@ function clean($value) {
         >
 
         <label>Last Name</label>
+
         <input
             type="text"
             name="last_name"
@@ -222,6 +297,7 @@ function clean($value) {
         >
 
         <label>Contact Number</label>
+
         <input
             type="text"
             name="contact_number"
@@ -234,8 +310,13 @@ function clean($value) {
         </button>
 
         <?php if ($edit_traveler): ?>
-            <a href="travelers.php">Cancel</a>
+
+            <a class="cancel" href="travelers.php">
+                Cancel
+            </a>
+
         <?php endif; ?>
+
     </form>
 
     <hr>
@@ -243,6 +324,7 @@ function clean($value) {
     <h2>Traveler Records</h2>
 
     <table>
+
         <tr>
             <th>ID</th>
             <th>First Name</th>
@@ -252,32 +334,64 @@ function clean($value) {
         </tr>
 
         <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= clean($row["id"]) ?></td>
-                <td><?= clean($row["first_name"]) ?></td>
-                <td><?= clean($row["last_name"]) ?></td>
-                <td><?= clean($row["contact_number"]) ?></td>
-                <td>
-                    <a class="edit"
-                       href="travelers.php?edit=<?= clean($row["id"]) ?>">
-                        Edit
-                    </a>
 
-                    <form method="POST" class="inline"
-                          onsubmit="return confirm('Delete this traveler?');">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="id"
-                               value="<?= clean($row["id"]) ?>">
-                        <button type="submit" class="delete">
-                            Delete
-                        </button>
-                    </form>
+            <tr>
+
+                <td><?= clean($row["id"]) ?></td>
+
+                <td><?= clean($row["first_name"]) ?></td>
+
+                <td><?= clean($row["last_name"]) ?></td>
+
+                <td><?= clean($row["contact_number"]) ?></td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <a
+                            class="edit"
+                            href="travelers.php?edit=<?= clean($row["id"]) ?>"
+                        >
+                            Edit
+                        </a>
+
+                        <form
+                            method="POST"
+                            class="inline"
+                            onsubmit="return confirm('Delete this traveler?');"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="action"
+                                value="delete"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?= clean($row["id"]) ?>"
+                            >
+
+                            <button type="submit" class="delete">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
                 </td>
+
             </tr>
+
         <?php endwhile; ?>
+
     </table>
 
 </div>
 
 </body>
 </html>
+```
