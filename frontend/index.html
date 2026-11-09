@@ -1,71 +1,450 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Border Entry System</title>
-
+    <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .container {
+        .topbar {
             display: flex;
-            gap: 15px;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
         }
-
-        .section {
-            flex: 1;
-            min-width: 0;
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-
-        iframe {
+        .topbar-right p {
+            margin: 0;
+        }
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            border: 1px solid #d0d7de;
+            background: #f6f8fa;
+            color: #57606a;
+            white-space: nowrap;
+        }
+        .status-pill.online {
+            color: #1a7f37;
+            border-color: #1a7f37;
+        }
+        .status-pill.offline {
+            color: #cf222e;
+            border-color: #cf222e;
+        }
+        .top-btn {
+            padding: 6px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            background: #f6f8fa;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .top-btn:hover {
+            background: #eaeef2;
+        }
+        .summary-card.clickable {
+            cursor: pointer;
+        }
+        .summary-card.clickable:hover {
+            border-color: #0969da;
+        }
+        .page-frame {
+            display: none;
             width: 100%;
-            height: 650px;
-            border: 1px solid gray;
+            height: calc(100vh - 75px);
+            border: 0;
+            background: #ffffff;
         }
-
-        @media (max-width: 800px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .section {
-                width: 100%;
-            }
+        .frame-loading {
+            display: none;
+            padding: 24px;
+            color: #57606a;
+        }
+        .alert-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .alert-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #d0d7de;
+        }
+        .alert-list li:last-child {
+            border-bottom: none;
+        }
+        .alert-type {
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .badge-unread {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #0969da;
+            color: #ffffff;
+            margin-left: 8px;
+        }
+        .empty-note {
+            color: #57606a;
         }
     </style>
 </head>
-
 <body>
 
-    <h1>Border Entry Payment and Personnel Tracking System</h1>
+<div class="dashboard-layout">
 
-    <hr>
+    <aside class="sidebar">
 
-    <div class="container">
-
-        <div class="section">
-            <h2>Personnel Management</h2>
-            <iframe src="pages/personnel.html"></iframe>
+        <div class="sidebar-brand">
+            <h2>Border Entry System</h2>
+            <p>Payment & Personnel Tracking</p>
         </div>
 
-        <div class="section">
-            <h2>Shift Management</h2>
-            <iframe src="pages/shifts.html"></iframe>
+        <div class="sidebar-section">
+            <h4>MAIN MENU</h4>
+            <a href="/frontend/" class="active">Dashboard</a>
         </div>
 
-        <div class="section">
-            <h2>Checkpoint Assignment Management</h2>
-            <iframe src="pages/assignments.html"></iframe>
+        <div class="sidebar-section">
+            <h4>BORDER OPERATIONS</h4>
+            <a href="/php/travelers.php">Travelers</a>
+            <a href="/php/vehicles.php">Vehicles</a>
+            <a href="/php/entry_records.php">Entry Records</a>
+            <a href="/php/kyfer/checkpoints.php">Checkpoints</a>
+            <a href="/php/kyfer/lanes.php">Lanes</a>
+            <a href="/php/kyfer/vehicle_types.php">Vehicle Types</a>
         </div>
 
-    </div>
+        <div class="sidebar-section">
+            <h4>PAYMENT MANAGEMENT</h4>
+            <a href="/php/kenn/fee_rules.php">Fee Rules</a>
+            <a href="/frontend/pages/penalties.html">Penalties</a>
+            <a href="/frontend/pages/payments.html">Payments</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>PERSONNEL MANAGEMENT</h4>
+            <a href="/personnel/index.php">Personnel</a>
+            <a href="/shifts/index.php">Shifts</a>
+            <a href="/php/dave/assignments.php">Checkpoint Assignments</a>
+        </div>
+
+        <div class="sidebar-section">
+            <h4>SYSTEM MANAGEMENT</h4>
+            <a href="/php/albert/users.php">Users & Roles</a>
+            <a href="/php/michael/violations.php">Violations</a>
+            <a href="/php/michael/alerts.php">Alerts</a>
+            <a href="/php/michael/audit_logs.php">Audit Logs</a>
+            <a href="/php/entry_report.php">Reports</a>
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <h3 id="page-title">Dashboard</h3>
+            <div class="topbar-right">
+                <span id="api-status" class="status-pill">Checking API...</span>
+                <button id="btn-refresh" class="top-btn" type="button">Refresh</button>
+                <button id="btn-newtab" class="top-btn" type="button" style="display:none;">Open in new tab</button>
+                <p>Border Entry Management System</p>
+            </div>
+        </header>
+
+        <div class="content" id="home-view">
+
+            <section class="welcome-section">
+                <h1>Welcome to Border Entry System</h1>
+                <p>
+                    Manage border operations, payments, and personnel
+                    in one place.
+                </p>
+            </section>
+
+            <section class="summary-grid">
+
+                <div class="summary-card clickable" data-href="/php/travelers.php">
+                    <p>Total Travelers</p>
+                    <h2 id="count-travelers">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/php/vehicles.php">
+                    <p>Registered Vehicles</p>
+                    <h2 id="count-vehicles">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/personnel/index.php">
+                    <p>Total Personnel</p>
+                    <h2 id="count-personnel">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/php/entry_records.php">
+                    <p>Entry Records</p>
+                    <h2 id="count-entries">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/php/kyfer/checkpoints.php">
+                    <p>Checkpoints</p>
+                    <h2 id="count-checkpoints">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/frontend/pages/payments.html">
+                    <p>Payments</p>
+                    <h2 id="count-payments">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/php/michael/violations.php">
+                    <p>Violations</p>
+                    <h2 id="count-violations">—</h2>
+                </div>
+
+                <div class="summary-card clickable" data-href="/php/albert/users.php">
+                    <p>Users</p>
+                    <h2 id="count-users">—</h2>
+                </div>
+
+            </section>
+
+            <section class="dashboard-panel">
+                <h3>Recent Alerts<span id="alert-badge"></span></h3>
+                <ul id="alert-list" class="alert-list">
+                    <li class="empty-note">Loading...</li>
+                </ul>
+            </section>
+
+            <section class="dashboard-panel">
+                <h3>System Overview</h3>
+                <p>
+                    This system helps manage traveler information,
+                    vehicle entries, payment transactions, and
+                    personnel assignments.
+                </p>
+            </section>
+
+            <section class="dashboard-panel">
+
+                <h3>Quick Access</h3>
+
+                <div class="quick-links">
+                    <a href="/php/travelers.php" class="quick-link">Traveler Management</a>
+                    <a href="/php/vehicles.php" class="quick-link">Vehicle Management</a>
+                    <a href="/php/entry_records.php" class="quick-link">Entry Records</a>
+                    <a href="/frontend/pages/payments.html" class="quick-link">Payment Management</a>
+                    <a href="/personnel/index.php" class="quick-link">Personnel Management</a>
+                    <a href="/php/dave/assignments.php" class="quick-link">Checkpoint Assignments</a>
+                </div>
+
+            </section>
+
+        </div>
+
+        <div id="frame-loading" class="frame-loading">Loading...</div>
+        <iframe id="page-frame" class="page-frame" title="Page content"></iframe>
+
+    </main>
+
+</div>
+
+<script>
+    const API = 'http://localhost:3000/api';
+    const API_ROOT = 'http://localhost:3000/';
+    const HOME = '/frontend/';
+
+    const frame = document.getElementById('page-frame');
+    const frameLoading = document.getElementById('frame-loading');
+    const homeView = document.getElementById('home-view');
+    const pageTitle = document.getElementById('page-title');
+    const statusPill = document.getElementById('api-status');
+    const btnRefresh = document.getElementById('btn-refresh');
+    const btnNewTab = document.getElementById('btn-newtab');
+    const sidebarLinks = document.querySelectorAll('.sidebar a');
+    const allLinks = document.querySelectorAll('.sidebar a, .quick-link');
+
+    let currentHref = HOME;
+
+    const cards = [
+        ['count-travelers', 'travelers'],
+        ['count-vehicles', 'vehicles'],
+        ['count-personnel', 'personnel'],
+        ['count-entries', 'entry-records'],
+        ['count-checkpoints', 'checkpoints'],
+        ['count-payments', 'payments'],
+        ['count-violations', 'violations'],
+        ['count-users', 'users']
+    ];
+
+    function listFrom(body) {
+        if (Array.isArray(body)) return body;
+        return (body && body.data) || [];
+    }
+
+    function fetchList(path) {
+        return fetch(`${API}/${path}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Request failed');
+                return res.json();
+            })
+            .then(listFrom);
+    }
+
+    function setStatus(online) {
+        statusPill.textContent = online ? 'API online' : 'API offline';
+        statusPill.className = 'status-pill ' + (online ? 'online' : 'offline');
+    }
+
+    function checkStatus() {
+        fetch(API_ROOT)
+            .then(res => setStatus(res.ok))
+            .catch(() => setStatus(false));
+    }
+
+    function loadCounts() {
+        cards.forEach(([id, path]) => {
+            const el = document.getElementById(id);
+            el.textContent = '…';
+            fetchList(path)
+                .then(list => { el.textContent = list.length; })
+                .catch(() => { el.textContent = 'n/a'; });
+        });
+    }
+
+    function loadAlerts() {
+        const listEl = document.getElementById('alert-list');
+        const badge = document.getElementById('alert-badge');
+
+        fetchList('alerts')
+            .then(list => {
+                listEl.innerHTML = '';
+                const unread = list.filter(a => Number(a.is_read) === 0).length;
+                badge.innerHTML = '';
+
+                if (unread > 0) {
+                    const b = document.createElement('span');
+                    b.className = 'badge-unread';
+                    b.textContent = unread + ' unread';
+                    badge.appendChild(b);
+                }
+
+                if (list.length === 0) {
+                    const li = document.createElement('li');
+                    li.className = 'empty-note';
+                    li.textContent = 'No alerts yet.';
+                    listEl.appendChild(li);
+                    return;
+                }
+
+                list.slice(0, 5).forEach(alert => {
+                    const li = document.createElement('li');
+                    const type = document.createElement('span');
+                    type.className = 'alert-type';
+                    type.textContent = alert.alert_type || 'Alert';
+                    const msg = document.createElement('span');
+                    const text = alert.message || '';
+                    msg.textContent = text.length > 120 ? text.slice(0, 120) + '...' : text;
+                    li.appendChild(type);
+                    li.appendChild(msg);
+                    listEl.appendChild(li);
+                });
+            })
+            .catch(() => {
+                listEl.innerHTML = '';
+                const li = document.createElement('li');
+                li.className = 'empty-note';
+                li.textContent = 'Could not load alerts. Is the Node server running?';
+                listEl.appendChild(li);
+            });
+    }
+
+    function refreshHome() {
+        checkStatus();
+        loadCounts();
+        loadAlerts();
+    }
+
+    function setActive(href) {
+        sidebarLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === href);
+        });
+    }
+
+    function showHome() {
+        currentHref = HOME;
+        frame.style.display = 'none';
+        frame.src = 'about:blank';
+        frameLoading.style.display = 'none';
+        homeView.style.display = '';
+        btnNewTab.style.display = 'none';
+        pageTitle.textContent = 'Dashboard';
+        setActive(HOME);
+        history.replaceState(null, '', HOME);
+        refreshHome();
+    }
+
+    function openPage(href) {
+        if (href === HOME) {
+            showHome();
+            return;
+        }
+
+        const match = Array.from(sidebarLinks).find(link => link.getAttribute('href') === href);
+
+        currentHref = href;
+        frameLoading.style.display = 'block';
+        frame.src = href;
+        frame.style.display = 'block';
+        homeView.style.display = 'none';
+        btnNewTab.style.display = '';
+        pageTitle.textContent = match ? match.textContent.trim() : 'Page';
+        setActive(href);
+        history.replaceState(null, '', '#' + href);
+    }
+
+    frame.addEventListener('load', () => {
+        frameLoading.style.display = 'none';
+    });
+
+    allLinks.forEach(link => {
+        link.addEventListener('click', event => {
+            event.preventDefault();
+            openPage(link.getAttribute('href'));
+        });
+    });
+
+    document.querySelectorAll('.summary-card.clickable').forEach(card => {
+        card.addEventListener('click', () => openPage(card.dataset.href));
+    });
+
+    btnRefresh.addEventListener('click', () => {
+        if (currentHref === HOME) {
+            refreshHome();
+        } else {
+            frameLoading.style.display = 'block';
+            frame.src = currentHref;
+        }
+    });
+
+    btnNewTab.addEventListener('click', () => {
+        window.open(currentHref, '_blank');
+    });
+
+    setInterval(() => {
+        if (currentHref === HOME) refreshHome();
+    }, 30000);
+
+    refreshHome();
+
+    const saved = location.hash.slice(1);
+    if (saved.startsWith('/')) {
+        openPage(saved);
+    }
+</script>
 
 </body>
 </html>
