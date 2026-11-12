@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,6 +69,18 @@
                     placeholder="Enter username"
                     minlength="3"
                     maxlength="50"
+                    autocomplete="username"
+                    required
+                >
+
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter email address"
+                    maxlength="100"
+                    autocomplete="email"
                     required
                 >
 
@@ -80,6 +91,7 @@
                     name="password"
                     placeholder="Enter password"
                     minlength="8"
+                    autocomplete="new-password"
                     required
                 >
 
@@ -91,7 +103,8 @@
                 <select id="role" name="role_id" required>
                     <option value="">Select Role</option>
                     <option value="1">Admin</option>
-                    <option value="2">Staff</option>
+                    <option value="2">Personnel</option>
+                    <option value="3">Viewer</option>
                 </select>
 
                 <label for="status">Account Status</label>
@@ -151,6 +164,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Username</th>
+                            <th>Email</th>
                             <th>Role</th>
                             <th>Status</th>
                             <th>Created At</th>
@@ -160,7 +174,7 @@
 
                     <tbody id="userTableBody">
                         <tr>
-                            <td colspan="6">No users available.</td>
+                            <td colspan="7">No users available.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -168,7 +182,7 @@
 
         </section>
 
-        <!-- Users and Roles INNER JOIN Report -->
+        <!-- Users and Roles Report -->
         <section class="join-report">
 
             <h2>Users and Roles Report</h2>
@@ -204,5 +218,6 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/users.js"></script>
+
 </body>
 </html>
