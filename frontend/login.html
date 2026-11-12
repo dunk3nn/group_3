@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Border Entry System | Login</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --gold: #d6b46a;
+    --gold-light: #f0d99c;
+    --dark: #10110f;
+    --card: #1b1c19;
+    --muted: #999990;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(214,180,106,.09), transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(214,180,106,.06), transparent 35%),
+        var(--dark);
+    color: #f5f3ed;
+}
+
+.container {
+    width: 100%;
+    max-width: 440px;
+}
+
+.brand {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.brand-icon {
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 16px;
+    border: 1px solid rgba(214,180,106,.5);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.brand h1 {
+    font-size: 25px;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+}
+
+.brand p {
+    margin-top: 9px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.card {
+    background: linear-gradient(145deg, #20211d, #181916);
+    border: 1px solid rgba(214,180,106,.2);
+    border-radius: 17px;
+    padding: 35px;
+    box-shadow: 0 25px 70px rgba(0,0,0,.4);
+}
+
+.heading {
+    margin-bottom: 25px;
+}
+
+.heading h2 {
+    font-size: 23px;
+    margin-bottom: 9px;
+}
+
+.heading p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(214,180,106,.2);
+}
+
+.tab {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.tab.active {
+    color: var(--gold-light);
+    border-bottom-color: var(--gold);
+}
+
+.form-group {
+    margin-bottom: 19px;
+}
+
+label {
+    display: block;
+    font-size: 11px;
+    margin-bottom: 9px;
+    color: #d6d3c9;
+    font-weight: 600;
+    letter-spacing: .5px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    background: #121310;
+    border: 1px solid #36372f;
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(214,180,106,.1);
+}
+
+input::placeholder {
+    color: #77776f;
+}
+
+.password-input {
+    padding-right: 65px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--gold);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(110deg, #c49c4c, #e2c47f);
+    color: #171710;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    filter: brightness(1.08);
+}
+
+.submit-button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.message {
+    display: none;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 7px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.message.error {
+    display: block;
+    color: #e58d8d;
+    background: rgba(190,70,70,.1);
+    border: 1px solid rgba(190,70,70,.2);
+}
+
+.message.success {
+    display: block;
+    color: #91c9a2;
+    background: rgba(70,160,90,.1);
+    border: 1px solid rgba(70,160,90,.2);
+}
+
+.security-note {
+    text-align: center;
+    margin-top: 25px;
+    color: #77776f;
+    font-size: 11px;
+    letter-spacing: .7px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 23px;
+    color: #77776f;
+    font-size: 11px;
+}
+
+.hidden {
+    display: none;
+}
+
+@media(max-width:480px) {
+    .card {
+        padding: 25px 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="brand">
+        <div class="brand-icon">BE</div>
+        <h1>BORDER ENTRY SYSTEM</h1>
+        <p>Payment and Personnel Tracking System</p>
+    </div>
+
+    <div class="card">
+
+        <div class="heading">
+            <h2 id="pageTitle">Welcome to Border Entry System.</h2>
+            <p id="pageSubtitle">
+                Secure access to your Border Entry System.
+            </p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" id="loginTab" type="button">
+                Sign In
+            </button>
+
+            <button class="tab" id="registerTab" type="button">
+                Create Account
+            </button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm">
+
+            <div class="form-group">
+                <label for="loginUsername">USERNAME</label>
+                <input id="loginUsername" type="text"
+                       placeholder="Enter your username"
+                       autocomplete="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword">PASSWORD</label>
+
+                <div class="input-wrapper">
+                    <input id="loginPassword" class="password-input"
+                           type="password"
+                           placeholder="Enter your password"
+                           autocomplete="current-password" required>
+
+                    <button type="button" class="toggle-password"
+                            data-target="loginPassword">Show</button>
+                </div>
+            </div>
+
+            <button class="submit-button" type="submit" id="loginButton">
+                Sign In
+            </button>
+
+        </form>
+
+        <!-- REGISTRATION FORM -->
+        <form id="registerForm" class="hidden">
+
+            <div class="form-group">
+                <label for="registerUsername">USERNAME</label>
+                <input id="registerUsername" type="text"
+                       placeholder="Choose a username"
+                       autocomplete="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="registerEmail">EMAIL ADDRESS</label>
+                <input id="registerEmail" type="email"
+                       placeholder="Enter your email"
+                       autocomplete="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="registerPassword">PASSWORD</label>
+
+                <div class="input-wrapper">
+                    <input id="registerPassword" class="password-input"
+                           type="password"
+                           placeholder="At least 8 characters"
+                           autocomplete="new-password" required>
+
+                    <button type="button" class="toggle-password"
+                            data-target="registerPassword">Show</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">CONFIRM PASSWORD</label>
+                <input id="confirmPassword" type="password"
+                       placeholder="Confirm your password"
+                       autocomplete="new-password" required>
+            </div>
+
+            <button class="submit-button" type="submit"
+                    id="registerButton">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="security-note">
+            AUTHORIZED PERSONNEL ONLY
+        </div>
+
+    </div>
+
+    <div class="footer">
+        BORDER ENTRY SYSTEM
+    </div>
+
+</div>
+
+<script>
+const API = `${window.location.protocol}//${window.location.hostname}:3000/api/auth`;
+
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const loginTab = document.getElementById('loginTab');
+const registerTab = document.getElementById('registerTab');
+const message = document.getElementById('message');
+
+function showMessage(text, type) {
+    message.textContent = text;
+    message.className = `message ${type}`;
+}
+
+function clearMessage() {
+    message.textContent = '';
+    message.className = 'message';
+}
+
+function showLogin() {
+    clearMessage();
+    loginForm.classList.remove('hidden');
+    registerForm.classList.add('hidden');
+
+    loginTab.classList.add('active');
+    registerTab.classList.remove('active');
+
+    document.getElementById('pageTitle').textContent =
+        'Welcome to Border Entry System.';
+
+    document.getElementById('pageSubtitle').textContent =
+        'Secure access to your Border Entry System.';
+}
+
+function showRegister() {
+    clearMessage();
+    loginForm.classList.add('hidden');
+    registerForm.classList.remove('hidden');
+
+    loginTab.classList.remove('active');
+    registerTab.classList.add('active');
+
+    document.getElementById('pageTitle').textContent =
+        'Create Your Account.';
+
+    document.getElementById('pageSubtitle').textContent =
+        'Register for secure access to the system.';
+}
+
+loginTab.addEventListener('click', showLogin);
+registerTab.addEventListener('click', showRegister);
+
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.target);
+        const visible = input.type === 'password';
+
+        input.type = visible ? 'text' : 'password';
+        button.textContent = visible ? 'Hide' : 'Show';
+    });
+});
+
+// CREATE ACCOUNT
+registerForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    clearMessage();
+
+    const username = document.getElementById('registerUsername').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const button = document.getElementById('registerButton');
+
+    if (password.length < 8) {
+        return showMessage('Password must be at least 8 characters.', 'error');
+    }
+
+    if (password !== confirm) {
+        return showMessage('Passwords do not match.', 'error');
+    }
+
+    button.disabled = true;
+    button.textContent = 'Creating Account...';
+
+    try {
+        const response = await fetch(`${API}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Account creation failed.');
+        }
+
+        registerForm.reset();
+        showLogin();
+        showMessage(
+            'Account created successfully! You can now sign in.',
+            'success'
+        );
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Create Account';
+    }
+});
+
+// SIGN IN
+loginForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    clearMessage();
+
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const button = document.getElementById('loginButton');
+
+    button.disabled = true;
+    button.textContent = 'Signing In...';
+
+    try {
+        const response = await fetch(`${API}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Login failed.');
+        }
+
+        sessionStorage.setItem('borderEntryUser', JSON.stringify(result.user));
+
+        window.location.href = 'index.html';
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Sign In';
+    }
+});
+</script>
+
+</body>
+</html>
