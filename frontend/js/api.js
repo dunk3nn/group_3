@@ -144,3 +144,44 @@ async function getCheckpoints() {
     const response = await fetch(`${API_URL}/checkpoints`);
     return await response.json();
 }
+
+// User Management functions
+async function getUsers() {
+    const response = await fetch(`${API_URL}/users`);
+    return await response.json();
+}
+
+async function getUserRoles() {
+    const response = await fetch(`${API_URL}/users/roles`);
+    return await response.json();
+}
+
+async function addUser(data) {
+    const response = await fetch(`${API_URL}/users`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    return await response.json();
+}
+
+async function updateUser(id, data) {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    return await response.json();
+}
+
+async function deactivateUser(id) {
+    const response = await fetch(`${API_URL}/users/${id}`, {
+        method: 'DELETE'
+    });
+    return await response.json();
+}
+
+async function getUsersWithRoles() {
+    const response = await fetch(`${API_URL}/users/report`);
+    return await response.json();
+}

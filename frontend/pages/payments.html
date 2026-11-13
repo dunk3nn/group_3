@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Processing</title>
+
     <style>
         :root {
             --primary: #059669;
@@ -15,40 +17,169 @@
             --border: #e2e8f0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-body); color: var(--text-main); padding: 24px; }
-        
-        .header { margin-bottom: 24px; }
-        .header h2 { font-size: 1.5rem; font-weight: 700; }
-        .header p { color: var(--text-muted); font-size: 0.875rem; margin-top: 4px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-        .layout-grid { display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: start; }
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            padding: 24px;
+        }
 
-        .card { background: var(--card-bg); border-radius: 8px; border: 1px solid var(--border); padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        .header {
+            margin-bottom: 24px;
+        }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); outline: none; font-size: 0.9rem; background: #fff; transition: border 0.2s; }
-        .form-group input:focus, .form-group select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(5,150,105,0.1); }
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
 
-        .btn-success { width: 100%; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
-        .btn-success:hover { background: var(--primary-hover); }
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
 
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
-        th { background: #f1f5f9; padding: 12px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
-        td { padding: 12px; border-bottom: 1px solid var(--border); }
-        tbody tr:hover { background: #f8fafc; }
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
 
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
-        .badge-cash { background: #dcfce7; color: #15803d; }
-        .badge-card { background: #e0f2fe; color: #0369a1; }
-        .badge-online { background: #f3e8ff; color: #6b21a8; }
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
 
-        .empty-state { text-align: center; color: var(--text-muted); padding: 20px; }
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            outline: none;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(5,150,105,0.1);
+        }
+
+        .btn-success {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .btn-success:hover {
+            background: var(--primary-hover);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            padding: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-cash {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-card {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .badge-online {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="header">
@@ -57,41 +188,77 @@
     </div>
 
     <div class="layout-grid">
-        <!-- Add Form -->
+
+        <!-- PAYMENT FORM -->
         <div class="card">
             <h3>Process Payment</h3>
+
             <form id="paymentForm">
+
                 <div class="form-group">
-                    <label>Entry Record ID</label>
-                    <input type="number" id="entry_id" placeholder="e.g. 101" required>
+                    <label for="entry_id">Entry Record ID</label>
+                    <input
+                        type="number"
+                        id="entry_id"
+                        min="1"
+                        placeholder="Enter entry record ID"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
-                    <label>Fee Rule ID</label>
-                    <input type="number" id="fee_rule_id" placeholder="e.g. 1" required>
+                    <label for="fee_rule_id">Fee Rule ID</label>
+                    <input
+                        type="number"
+                        id="fee_rule_id"
+                        min="1"
+                        placeholder="Enter fee rule ID"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
-                    <label>Penalty ID (Optional)</label>
-                    <input type="number" id="penalty_id" placeholder="Leave blank if none">
+                    <label for="penalty_id">Penalty ID (Optional)</label>
+                    <input
+                        type="number"
+                        id="penalty_id"
+                        min="1"
+                        placeholder="Leave blank if none"
+                    >
                 </div>
+
                 <div class="form-group">
-                    <label>Amount Paid (₱)</label>
-                    <input type="number" step="0.01" id="amount_paid" placeholder="0.00" required>
+                    <label for="amount_paid">Amount Paid (₱)</label>
+                    <input
+                        type="number"
+                        id="amount_paid"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="0.00"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
-                    <label>Payment Method</label>
-                    <select id="payment_method">
+                    <label for="payment_method">Payment Method</label>
+                    <select id="payment_method" required>
                         <option value="Cash">Cash</option>
                         <option value="Card">Credit/Debit Card</option>
                         <option value="Online">Online / e-Wallet</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-success">Process Payment</button>
+
+                <button type="submit" class="btn-success">
+                    Process Payment
+                </button>
+
             </form>
         </div>
 
-        <!-- Table View -->
+        <!-- PAYMENT TABLE -->
         <div class="card">
             <h3>Recorded Payment Transactions</h3>
+
             <div class="table-container">
                 <table>
                     <thead>
@@ -104,43 +271,22 @@
                             <th>Method</th>
                         </tr>
                     </thead>
+
                     <tbody id="paymentsTable">
-                        <tr><td colspan="6" class="empty-state">Loading records...</td></tr>
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                Loading payment records...
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
     </div>
 
-    <script>
-        async function fetchPayments() {
-            try {
-                const res = await fetch('http://localhost:3000/api/payments');
-                const data = await res.json();
-                const tbody = document.getElementById('paymentsTable');
-                if (!data.length) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No payments processed yet.</td></tr>';
-                    return;
-                }
-                tbody.innerHTML = data.map(pay => {
-                    const method = (pay.payment_method || 'Cash').toLowerCase();
-                    const badgeClass = method.includes('card') ? 'badge-card' : method.includes('online') ? 'badge-online' : 'badge-cash';
-                    return `
-                        <tr>
-                            <td><strong>#${pay.id}</strong></td>
-                            <td>Record #${pay.entry_id}</td>
-                            <td>Rule #${pay.fee_rule_id}</td>
-                            <td>${pay.penalty_id ? '#' + pay.penalty_id : '—'}</td>
-                            <td style="font-weight: 600;">₱${parseFloat(pay.amount_paid || 0).toFixed(2)}</td>
-                            <td><span class="badge ${badgeClass}">${pay.payment_method || 'Cash'}</span></td>
-                        </tr>
-                    `;
-                }).join('');
-            } catch (err) {
-                document.getElementById('paymentsTable').innerHTML = '<tr><td colspan="6" class="empty-state" style="color: #ef4444;">Failed to load payments. Ensure Node backend is active.</td></tr>';
-            }
-        }
-        fetchPayments();
-    </script>
+    <!-- EXTERNAL JAVASCRIPT -->
+    <script src="../js/payments.js"></script>
+
 </body>
 </html>

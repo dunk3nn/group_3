@@ -1,8 +1,7 @@
-
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
-// GET all active users
+// Get all users
 const getAllUsers = async (req, res) => {
     try {
         const users = await userModel.getAllUsers();
@@ -13,27 +12,24 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-// POST add user
+// Create user
 const createUser = async (req, res) => {
     try {
-        const { username, email, password, role_id } = req.body;
+        const { username, email, password, role_id, is_active = 1 } = req.body;
 
         if (!username || !email || !password || !role_id) {
-            return res.status(400).json({
-                message: 'All fields are required'
-            });
+            return res.status(400).json({ message: 'All fields are required' });
         }
 
         if (
             typeof username !== 'string' ||
             typeof email !== 'string' ||
             typeof password !== 'string' ||
+            ![0, 1].includes(Number(is_active)) ||
             !Number.isInteger(Number(role_id)) ||
             Number(role_id) < 1
         ) {
-            return res.status(400).json({
-                message: 'Invalid input'
-            });
+            return res.status(400).json({ message: 'Invalid input' });
         }
 
         if (password.length < 8) {
@@ -42,9 +38,12 @@ const createUser = async (req, res) => {
             });
         }
 
+        const cleanUsername = username.trim();
+        const cleanEmail = email.trim();
+
         const existingUser = await userModel.checkExistingUser(
-            username.trim(),
-            email.trim()
+            cleanUsername,
+            cleanEmail
         );
 
         if (existingUser) {
@@ -56,35 +55,31 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const result = await userModel.createUser(
-            username.trim(),
-            email.trim(),
+            cleanUsername,
+            cleanEmail,
             hashedPassword,
-            Number(role_id)
+            Number(role_id),
+            Number(is_active)
         );
 
         res.status(201).json({
             message: 'User created successfully',
             user_id: result.insertId
         });
-
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Failed to create user'
-        });
+        res.status(500).json({ message: 'Failed to create user' });
     }
 };
 
-// PUT edit user
+// Update user
 const updateUser = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const { username, email, role_id, password } = req.body;
+        const { username, email, role_id, password, is_active = 1 } = req.body;
 
         if (!Number.isInteger(id) || id < 1) {
-            return res.status(400).json({
-                message: 'Invalid user ID'
-            });
+            return res.status(400).json({ message: 'Invalid user ID' });
         }
 
         if (!username || !email || !role_id) {
@@ -98,18 +93,13 @@ const updateUser = async (req, res) => {
             typeof email !== 'string' ||
             (password !== undefined && typeof password !== 'string') ||
             !Number.isInteger(Number(role_id)) ||
-            Number(role_id) < 1
+            Number(role_id) < 1 ||
+            ![0, 1].includes(Number(is_active))
         ) {
-            return res.status(400).json({
-                message: 'Invalid input'
-            });
+            return res.status(400).json({ message: 'Invalid input' });
         }
 
-        if (
-            password !== undefined &&
-            password.length > 0 &&
-            password.length < 8
-        ) {
+        if (password && password.length < 8) {
             return res.status(400).json({
                 message: 'Password must be at least 8 characters'
             });
@@ -118,14 +108,15 @@ const updateUser = async (req, res) => {
         const user = await userModel.getUserById(id);
 
         if (!user) {
-            return res.status(404).json({
-                message: 'User not found'
-            });
+            return res.status(404).json({ message: 'User not found' });
         }
 
+        const cleanUsername = username.trim();
+        const cleanEmail = email.trim();
+
         const existingUser = await userModel.checkExistingUser(
-            username.trim(),
-            email.trim(),
+            cleanUsername,
+            cleanEmail,
             id
         );
 
@@ -141,33 +132,27 @@ const updateUser = async (req, res) => {
 
         await userModel.updateUser(
             id,
-            username.trim(),
-            email.trim(),
+            cleanUsername,
+            cleanEmail,
             Number(role_id),
-            hashedPassword
+            hashedPassword,
+            Number(is_active)
         );
 
-        res.json({
-            message: 'User updated successfully'
-        });
-
+        res.json({ message: 'User updated successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Failed to update user'
-        });
+        res.status(500).json({ message: 'Failed to update user' });
     }
 };
 
-// DELETE (deactivate) user
+// Deactivate user
 const deactivateUser = async (req, res) => {
     try {
         const id = Number(req.params.id);
 
         if (!Number.isInteger(id) || id < 1) {
-            return res.status(400).json({
-                message: 'Invalid user ID'
-            });
+            return res.status(400).json({ message: 'Invalid user ID' });
         }
 
         const result = await userModel.deactivateUser(id);
@@ -178,19 +163,14 @@ const deactivateUser = async (req, res) => {
             });
         }
 
-        res.json({
-            message: 'User deactivated successfully'
-        });
-
+        res.json({ message: 'User deactivated successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Failed to deactivate user'
-        });
+        res.status(500).json({ message: 'Failed to deactivate user' });
     }
 };
 
-// GET users with roles
+// Get users with roles
 const getUsersWithRoles = async (req, res) => {
     try {
         const users = await userModel.getUsersWithRoles();
@@ -203,16 +183,14 @@ const getUsersWithRoles = async (req, res) => {
     }
 };
 
-// GET available roles
+// Get available roles
 const getAllRoles = async (req, res) => {
     try {
         const roles = await userModel.getAllRoles();
         res.json(roles);
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Failed to retrieve roles'
-        });
+        res.status(500).json({ message: 'Failed to retrieve roles' });
     }
 };
 

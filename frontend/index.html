@@ -5,326 +5,339 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Border Entry System</title>
     <link rel="stylesheet" href="css/dashboard.css">
-
-    <style>
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .topbar-right p {
-            margin: 0;
-        }
-
-        .status-pill {
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-            border: 1px solid #d0d7de;
-            background: #f6f8fa;
-            color: #57606a;
-            white-space: nowrap;
-        }
-
-        .status-pill.online {
-            color: #1a7f37;
-            border-color: #1a7f37;
-        }
-
-        .status-pill.offline {
-            color: #cf222e;
-            border-color: #cf222e;
-        }
-
-        .top-btn {
-            padding: 6px 12px;
-            border: 1px solid #d0d7de;
-            border-radius: 6px;
-            background: #f6f8fa;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .top-btn:hover {
-            background: #eaeef2;
-        }
-
-        .summary-card.clickable {
-            cursor: pointer;
-        }
-
-        .summary-card.clickable:hover {
-            border-color: #0969da;
-        }
-
-        .page-frame {
-            display: none;
-            width: 100%;
-            height: calc(100vh - 75px);
-            border: 0;
-            background: #ffffff;
-        }
-
-        .frame-loading {
-            display: none;
-            padding: 24px;
-            color: #57606a;
-        }
-
-        .alert-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .alert-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #d0d7de;
-        }
-
-        .alert-list li:last-child {
-            border-bottom: none;
-        }
-
-        .alert-type {
-            font-weight: 600;
-            margin-right: 8px;
-        }
-
-        .badge-unread {
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 999px;
-            background: #0969da;
-            color: #ffffff;
-            margin-left: 8px;
-        }
-
-        .empty-note {
-            color: #57606a;
-        }
-    </style>
 </head>
-
 <body>
 
 <div class="dashboard-layout">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
 
-        <div class="sidebar-brand">
-            <h2>Border Entry System</h2>
-            <p>Payment & Personnel Tracking</p>
-        </div>
+        <a class="sidebar-brand" href="/frontend/">
+            <span class="brand-mark">BE</span>
+            <span class="brand-copy">
+                <strong>BORDER ENTRY</strong>
+                <small>SYSTEM MANAGEMENT</small>
+            </span>
+        </a>
 
-        <div class="sidebar-section">
-            <h4>MAIN MENU</h4>
-            <a href="/frontend/" class="active">Dashboard</a>
-        </div>
+        <nav class="sidebar-nav">
 
-        <div class="sidebar-section">
-            <h4>BORDER OPERATIONS</h4>
+            <section class="sidebar-section">
+                <h4>OVERVIEW</h4>
+                <a href="/frontend/" class="nav-link active">
+                    <span class="nav-icon">⌂</span>Dashboard
+                </a>
+            </section>
 
-            <a href="/php/divine/travelers.php">Travelers</a>
-            <a href="/php/divine/vehicles.php">Vehicles</a>
-            <a href="/php/divine/entry_records.php">Entry Records</a>
+            <section class="sidebar-section">
+                <h4>BORDER OPERATIONS</h4>
+                <a href="/php/divine/travelers.php" class="nav-link"><span class="nav-icon">◎</span>Travelers</a>
+                <a href="/php/divine/vehicles.php" class="nav-link"><span class="nav-icon">▰</span>Vehicles</a>
+                <a href="/php/divine/entry_records.php" class="nav-link"><span class="nav-icon">▤</span>Entry Records</a>
+                <a href="/php/kyfer/checkpoints.php" class="nav-link"><span class="nav-icon">⌖</span>Checkpoints</a>
+                <a href="/php/kyfer/lanes.php" class="nav-link"><span class="nav-icon">⇄</span>Lanes</a>
+                <a href="/php/kyfer/vehicle_types.php" class="nav-link"><span class="nav-icon">▱</span>Vehicle Types</a>
+            </section>
 
-            <a href="/php/kyfer/checkpoints.php">Checkpoints</a>
-            <a href="/php/kyfer/lanes.php">Lanes</a>
-            <a href="/php/kyfer/vehicle_types.php">Vehicle Types</a>
-        </div>
+            <section class="sidebar-section">
+                <h4>PAYMENT MANAGEMENT</h4>
+                <a href="/php/kenn/fee_rules.php" class="nav-link"><span class="nav-icon">◇</span>Fee Rules</a>
+                <a href="/frontend/pages/penalties.html" class="nav-link"><span class="nav-icon">!</span>Penalties</a>
+                <a href="/frontend/pages/payments.html" class="nav-link"><span class="nav-icon">₱</span>Payments</a>
+            </section>
 
-        <div class="sidebar-section">
-            <h4>PAYMENT MANAGEMENT</h4>
+            <section class="sidebar-section">
+                <h4>PERSONNEL MANAGEMENT</h4>
+                <a href="/personnel/index.php" class="nav-link"><span class="nav-icon">♙</span>Personnel</a>
+                <a href="/shifts/index.php" class="nav-link"><span class="nav-icon">◷</span>Shifts</a>
+                <a href="/php/dave/assignments.php" class="nav-link"><span class="nav-icon">⌗</span>Checkpoint Assignments</a>
+            </section>
 
-            <a href="/php/kenn/fee_rules.php">Fee Rules</a>
-            <a href="/frontend/pages/penalties.html">Penalties</a>
-            <a href="/frontend/pages/payments.html">Payments</a>
-        </div>
+            <section class="sidebar-section">
+                <h4>SYSTEM MANAGEMENT</h4>
+                <a href="/php/albert/users.php" class="nav-link"><span class="nav-icon">♧</span>Users &amp; Roles</a>
+                <a href="/php/michael/violations.php" class="nav-link"><span class="nav-icon">⚑</span>Violations</a>
+                <a href="/php/michael/alerts.php" class="nav-link"><span class="nav-icon">♢</span>Alerts</a>
+                <a href="/php/michael/audit_logs.php" class="nav-link"><span class="nav-icon">≡</span>Audit Logs</a>
+                <a href="/php/michael/violation_report.php" class="nav-link"><span class="nav-icon">▥</span>Violation Report</a>
+                <a href="/php/divine/entry_report.php" class="nav-link"><span class="nav-icon">▧</span>Entry Report</a>
+            </section>
 
-        <div class="sidebar-section">
-            <h4>PERSONNEL MANAGEMENT</h4>
+        </nav>
 
-            <a href="/personnel/index.php">Personnel</a>
-            <a href="/shifts/index.php">Shifts</a>
-            <a href="/php/dave/assignments.php">Checkpoint Assignments</a>
-        </div>
-
-        <div class="sidebar-section">
-            <h4>SYSTEM MANAGEMENT</h4>
-
-            <a href="/php/albert/users.php">Users & Roles</a>
-            <a href="/php/michael/violations.php">Violations</a>
-            <a href="/php/michael/alerts.php">Alerts</a>
-            <a href="/php/michael/audit_logs.php">Audit Logs</a>
-            <a href="/php/michael/violation_report.php">Violation Report</a>
-            <a href="/php/divine/entry_report.php">Entry Report</a>
+        <div class="sidebar-footer">
+            <span class="footer-indicator"></span>
+            <span>Border operations workspace</span>
         </div>
 
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
         <header class="topbar">
-
-            <h3 id="page-title">Dashboard</h3>
+            <div class="topbar-title">
+                <span class="eyebrow">BORDER ENTRY SYSTEM</span>
+                <h2 id="page-title">Dashboard</h2>
+            </div>
 
             <div class="topbar-right">
                 <span id="api-status" class="status-pill">
-                    Checking API...
+                    <span class="status-dot"></span>Checking API...
                 </span>
 
                 <button id="btn-refresh" class="top-btn" type="button">
-                    Refresh
+                    ↻ Refresh
                 </button>
 
                 <button id="btn-newtab" class="top-btn"
                         type="button" style="display:none;">
-                    Open in new tab
+                    Open in new tab ↗
                 </button>
-
-                <p>Border Entry Management System</p>
             </div>
-
         </header>
 
         <div class="content" id="home-view">
 
+            <!-- WELCOME -->
             <section class="welcome-section">
-                <h1>Welcome to Border Entry System</h1>
+                <div>
+                    <span class="section-kicker">OPERATIONS OVERVIEW</span>
+                    <h1>Welcome to Border Entry System</h1>
+                    <p>
+                        Monitor border activity, manage payments,
+                        and keep personnel operations organized.
+                    </p>
+                </div>
 
-                <p>
-                    Manage border operations, payments, and personnel
-                    in one place.
-                </p>
+                <div class="welcome-date" id="today-date"></div>
             </section>
 
+            <!-- STATISTICS -->
             <section class="summary-grid">
 
                 <div class="summary-card clickable"
                      data-href="/php/divine/travelers.php">
-                    <p>Total Travelers</p>
+                    <div class="card-top">
+                        <span class="stat-icon">◎</span>
+                        <span class="stat-label">TRAVELERS</span>
+                    </div>
                     <h2 id="count-travelers">—</h2>
+                    <p class="stat-caption">Total registered travelers</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/php/divine/vehicles.php">
-                    <p>Registered Vehicles</p>
+                    <div class="card-top">
+                        <span class="stat-icon">▰</span>
+                        <span class="stat-label">VEHICLES</span>
+                    </div>
                     <h2 id="count-vehicles">—</h2>
+                    <p class="stat-caption">Registered vehicles</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/personnel/index.php">
-                    <p>Total Personnel</p>
+                    <div class="card-top">
+                        <span class="stat-icon">♙</span>
+                        <span class="stat-label">PERSONNEL</span>
+                    </div>
                     <h2 id="count-personnel">—</h2>
+                    <p class="stat-caption">Total personnel records</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/php/divine/entry_records.php">
-                    <p>Entry Records</p>
+                    <div class="card-top">
+                        <span class="stat-icon">▤</span>
+                        <span class="stat-label">ENTRY RECORDS</span>
+                    </div>
                     <h2 id="count-entries">—</h2>
+                    <p class="stat-caption">Recorded border entries</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/php/kyfer/checkpoints.php">
-                    <p>Checkpoints</p>
+                    <div class="card-top">
+                        <span class="stat-icon">⌖</span>
+                        <span class="stat-label">CHECKPOINTS</span>
+                    </div>
                     <h2 id="count-checkpoints">—</h2>
+                    <p class="stat-caption">Active checkpoint records</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/frontend/pages/payments.html">
-                    <p>Payments</p>
+                    <div class="card-top">
+                        <span class="stat-icon">₱</span>
+                        <span class="stat-label">PAYMENTS</span>
+                    </div>
                     <h2 id="count-payments">—</h2>
+                    <p class="stat-caption">Payment transactions</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/php/michael/violations.php">
-                    <p>Violations</p>
+                    <div class="card-top">
+                        <span class="stat-icon">⚑</span>
+                        <span class="stat-label">VIOLATIONS</span>
+                    </div>
                     <h2 id="count-violations">—</h2>
+                    <p class="stat-caption">Recorded violations</p>
                 </div>
 
                 <div class="summary-card clickable"
                      data-href="/php/albert/users.php">
-                    <p>Users</p>
+                    <div class="card-top">
+                        <span class="stat-icon">♧</span>
+                        <span class="stat-label">SYSTEM USERS</span>
+                    </div>
                     <h2 id="count-users">—</h2>
+                    <p class="stat-caption">Registered system accounts</p>
                 </div>
 
             </section>
 
-            <section class="dashboard-panel">
+            <!-- REVENUE AND ALERTS -->
+            <section class="dashboard-grid">
 
-                <h3>Recent Alerts<span id="alert-badge"></span></h3>
+                <article class="dashboard-panel revenue-panel">
 
-                <ul id="alert-list" class="alert-list">
-                    <li class="empty-note">Loading...</li>
-                </ul>
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">FINANCIAL SUMMARY</span>
+                            <h3>Revenue Overview</h3>
+                        </div>
+                        <span class="panel-tag">Recorded payments</span>
+                    </div>
+
+                    <div class="revenue-total">
+                        <div>
+                            <span class="muted-label">TOTAL REVENUE</span>
+                            <strong id="total-revenue">₱0.00</strong>
+                        </div>
+                        <span class="revenue-note" id="revenue-count">
+                            Based on payment records
+                        </span>
+                    </div>
+
+                    <div class="chart-wrap">
+                        <div class="chart-y-labels">
+                            <span>₱<span id="chart-max">0</span></span>
+                            <span>₱<span id="chart-mid">0</span></span>
+                            <span>₱0</span>
+                        </div>
+
+                        <div class="chart-area">
+                            <div class="chart-grid-lines">
+                                <i></i><i></i><i></i>
+                            </div>
+                            <div id="revenue-chart" class="bar-chart"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-months" id="chart-months">
+                        <span>—</span>
+                    </div>
+
+                </article>
+
+                <article class="dashboard-panel alerts-panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">SYSTEM NOTIFICATIONS</span>
+                            <h3>Recent Alerts</h3>
+                        </div>
+
+                        <a class="text-link"
+                           href="/php/michael/alerts.php">
+                            View all ↗
+                        </a>
+                    </div>
+
+                    <div id="alert-badge" class="alert-count"></div>
+
+                    <ul id="alert-list" class="alert-list">
+                        <li class="empty-note">Loading alerts...</li>
+                    </ul>
+
+                </article>
 
             </section>
 
-            <section class="dashboard-panel">
+            <!-- SYSTEM OVERVIEW -->
+            <section class="dashboard-panel overview-panel">
 
-                <h3>System Overview</h3>
+                <div class="panel-heading">
+                    <div>
+                        <span class="section-kicker">WORKSPACE</span>
+                        <h3>System Overview</h3>
+                    </div>
+
+                    <span class="panel-tag">Centralized management</span>
+                </div>
 
                 <p>
-                    This system helps manage traveler information,
-                    vehicle entries, payment transactions, and
-                    personnel assignments.
+                    Manage traveler information, vehicle types,
+                    entry records, checkpoints, lanes, fee rules,
+                    payment transactions, violations, and personnel
+                    assignments from one organized workspace.
                 </p>
-
-            </section>
-
-            <section class="dashboard-panel">
-
-                <h3>Quick Access</h3>
 
                 <div class="quick-links">
 
-                    <a href="/php/divine/travelers.php"
-                       class="quick-link">
+                    <a href="/php/divine/travelers.php" class="quick-link">
+                        <span>◎</span>
                         Traveler Management
+                        <b>↗</b>
                     </a>
 
-                    <a href="/php/divine/vehicles.php"
-                       class="quick-link">
+                    <a href="/php/divine/vehicles.php" class="quick-link">
+                        <span>▰</span>
                         Vehicle Management
+                        <b>↗</b>
                     </a>
 
-                    <a href="/php/divine/entry_records.php"
-                       class="quick-link">
+                    <a href="/php/divine/entry_records.php" class="quick-link">
+                        <span>▤</span>
                         Entry Records
+                        <b>↗</b>
                     </a>
 
-                    <a href="/frontend/pages/payments.html"
-                       class="quick-link">
+                    <a href="/frontend/pages/payments.html" class="quick-link">
+                        <span>₱</span>
                         Payment Management
+                        <b>↗</b>
                     </a>
 
-                    <a href="/personnel/index.php"
-                       class="quick-link">
+                    <a href="/personnel/index.php" class="quick-link">
+                        <span>♙</span>
                         Personnel Management
+                        <b>↗</b>
                     </a>
 
-                    <a href="/php/dave/assignments.php"
-                       class="quick-link">
+                    <a href="/php/dave/assignments.php" class="quick-link">
+                        <span>⌗</span>
                         Checkpoint Assignments
+                        <b>↗</b>
                     </a>
 
                 </div>
 
             </section>
+
+            <footer class="page-footer">
+                BORDER ENTRY SYSTEM
+                <span>•</span>
+                Payment &amp; Personnel Tracking
+            </footer>
 
         </div>
 
         <div id="frame-loading" class="frame-loading">
-            Loading...
+            Loading page...
         </div>
 
         <iframe id="page-frame"
@@ -333,337 +346,434 @@
         </iframe>
 
     </main>
-
 </div>
 
 <script>
+const API =
+    `${window.location.protocol}//${window.location.hostname}:3000/api`;
 
-    const API =
-        `${window.location.protocol}//${window.location.hostname}:3000/api`;
+const HOME = '/frontend/';
 
-    const HOME = '/frontend/';
+const frame = document.getElementById('page-frame');
+const frameLoading = document.getElementById('frame-loading');
+const homeView = document.getElementById('home-view');
+const pageTitle = document.getElementById('page-title');
 
-    const frame = document.getElementById('page-frame');
-    const frameLoading = document.getElementById('frame-loading');
-    const homeView = document.getElementById('home-view');
-    const pageTitle = document.getElementById('page-title');
+const statusPill = document.getElementById('api-status');
+const btnRefresh = document.getElementById('btn-refresh');
+const btnNewTab = document.getElementById('btn-newtab');
 
-    const statusPill = document.getElementById('api-status');
-    const btnRefresh = document.getElementById('btn-refresh');
-    const btnNewTab = document.getElementById('btn-newtab');
+const sidebarLinks = document.querySelectorAll('.sidebar a.nav-link');
 
-    const sidebarLinks = document.querySelectorAll('.sidebar a');
-    const allLinks = document.querySelectorAll(
-        '.sidebar a, .quick-link'
-    );
+const allLinks = document.querySelectorAll(
+    '.sidebar a.nav-link, .quick-link'
+);
 
-    let currentHref = HOME;
+let currentHref = HOME;
 
-    const cards = [
-        ['count-travelers', 'travelers'],
-        ['count-vehicles', 'vehicles'],
-        ['count-personnel', 'personnel'],
-        ['count-entries', 'entry-records'],
-        ['count-checkpoints', 'checkpoints'],
-        ['count-payments', 'payments'],
-        ['count-violations', 'violations'],
-        ['count-users', 'users']
-    ];
+const cards = [
+    ['count-travelers', 'travelers'],
+    ['count-vehicles', 'vehicles'],
+    ['count-personnel', 'personnel'],
+    ['count-entries', 'entry-records'],
+    ['count-checkpoints', 'checkpoints'],
+    ['count-payments', 'payments'],
+    ['count-violations', 'violations'],
+    ['count-users', 'users']
+];
 
-    function listFrom(body) {
-        if (Array.isArray(body)) {
-            return body;
-        }
-
-        return (body && body.data) || [];
+function listFrom(body) {
+    if (Array.isArray(body)) {
+        return body;
     }
 
-    function fetchList(path) {
+    return (body && body.data) || [];
+}
 
-        return fetch(`${API}/${path}`)
-            .then(response => {
+function fetchList(path) {
+    return fetch(`${API}/${path}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Request failed');
+            }
 
-                if (!response.ok) {
-                    throw new Error('Request failed');
-                }
+            return response.json();
+        })
+        .then(listFrom);
+}
 
-                return response.json();
+function setStatus(online) {
+    statusPill.innerHTML = `
+        <span class="status-dot"></span>
+        ${online ? 'API online' : 'API offline'}
+    `;
 
-            })
-            .then(listFrom);
-    }
+    statusPill.className =
+        'status-pill ' + (online ? 'online' : 'offline');
+}
 
-    function setStatus(online) {
+function checkStatus() {
+    fetch(`${API}/travelers`)
+        .then(response => {
+            setStatus(response.ok);
+        })
+        .catch(() => {
+            setStatus(false);
+        });
+}
 
-        statusPill.textContent = online
-            ? 'API online'
-            : 'API offline';
+function loadCounts() {
+    cards.forEach(([id, path]) => {
 
-        statusPill.className =
-            'status-pill ' + (online ? 'online' : 'offline');
-    }
+        const element = document.getElementById(id);
 
-    function checkStatus() {
+        element.textContent = '…';
 
-        fetch(`${API}/travelers`)
-            .then(response => {
-                setStatus(response.ok);
+        fetchList(path)
+            .then(list => {
+                element.textContent = list.length;
             })
             .catch(() => {
-                setStatus(false);
+                element.textContent = 'n/a';
             });
-    }
 
-    function loadCounts() {
+    });
+}
 
-        cards.forEach(([id, path]) => {
+function peso(value) {
+    return new Intl.NumberFormat('en-PH', {
+        style: 'currency',
+        currency: 'PHP'
+    }).format(value || 0);
+}
 
-            const element = document.getElementById(id);
+function loadRevenue() {
 
-            element.textContent = '…';
+    fetchList('payments')
+        .then(payments => {
 
-            fetchList(path)
-                .then(list => {
-                    element.textContent = list.length;
-                })
-                .catch(() => {
-                    element.textContent = 'n/a';
-                });
+            const total = payments.reduce(
+                (sum, payment) =>
+                    sum + Number(payment.amount_paid || 0),
+                0
+            );
 
+            document.getElementById('total-revenue').textContent =
+                peso(total);
+
+            document.getElementById('revenue-count').textContent =
+                `${payments.length} recorded payment${payments.length === 1 ? '' : 's'}`;
+
+            renderRevenueChart(payments);
+
+        })
+        .catch(() => {
+
+            document.getElementById('total-revenue').textContent =
+                'Unavailable';
+
+            document.getElementById('revenue-count').textContent =
+                'Could not load payment data';
+
+            renderRevenueChart([]);
+        });
+}
+
+function renderRevenueChart(payments) {
+
+    const now = new Date();
+    const months = [];
+
+    for (let i = 5; i >= 0; i--) {
+
+        const date = new Date(
+            now.getFullYear(),
+            now.getMonth() - i,
+            1
+        );
+
+        months.push({
+            year: date.getFullYear(),
+            month: date.getMonth(),
+            label: date.toLocaleString('en', { month: 'short' }),
+            total: 0
         });
     }
 
-    function loadAlerts() {
+    payments.forEach(payment => {
 
-        const listEl = document.getElementById('alert-list');
-        const badge = document.getElementById('alert-badge');
+        const rawDate =
+            payment.payment_date || payment.created_at;
 
-        fetchList('alerts')
-            .then(list => {
+        if (!rawDate) return;
 
-                listEl.innerHTML = '';
+        const date = new Date(rawDate);
 
-                const unread = list.filter(
-                    alert => Number(alert.is_read) === 0
-                ).length;
+        if (Number.isNaN(date.getTime())) return;
 
-                badge.innerHTML = '';
+        const bucket = months.find(item =>
+            item.year === date.getFullYear() &&
+            item.month === date.getMonth()
+        );
 
-                if (unread > 0) {
+        if (bucket) {
+            bucket.total += Number(payment.amount_paid || 0);
+        }
+    });
 
-                    const badgeElement =
-                        document.createElement('span');
+    const max = Math.max(
+        ...months.map(item => item.total),
+        1
+    );
 
-                    badgeElement.className = 'badge-unread';
-                    badgeElement.textContent =
-                        unread + ' unread';
+    const mid = max / 2;
 
-                    badge.appendChild(badgeElement);
-                }
+    document.getElementById('chart-max').textContent =
+        Math.round(max).toLocaleString('en-PH');
 
-                if (list.length === 0) {
+    document.getElementById('chart-mid').textContent =
+        Math.round(mid).toLocaleString('en-PH');
 
-                    const li = document.createElement('li');
+    document.getElementById('revenue-chart').innerHTML =
+        months.map(item => {
 
-                    li.className = 'empty-note';
-                    li.textContent = 'No alerts yet.';
+            const height = item.total > 0
+                ? Math.max((item.total / max) * 100, 5)
+                : 3;
 
-                    listEl.appendChild(li);
+            return `
+                <div class="bar-column"
+                     title="${item.label}: ${peso(item.total)}">
 
-                    return;
-                }
+                    <div class="bar-value">
+                        ${item.total > 0 ? peso(item.total) : ''}
+                    </div>
 
-                list.slice(0, 5).forEach(alert => {
+                    <div class="bar-track">
+                        <span class="bar-fill"
+                              style="height:${height}%"></span>
+                    </div>
 
-                    const li = document.createElement('li');
+                </div>
+            `;
+        }).join('');
 
-                    const type = document.createElement('span');
+    document.getElementById('chart-months').innerHTML =
+        months.map(item =>
+            `<span>${item.label}</span>`
+        ).join('');
+}
 
-                    type.className = 'alert-type';
-                    type.textContent =
-                        alert.alert_type || 'Alert';
+function loadAlerts() {
 
-                    const message = document.createElement('span');
+    const listEl = document.getElementById('alert-list');
+    const badge = document.getElementById('alert-badge');
 
-                    const text = alert.message || '';
+    fetchList('alerts')
+        .then(list => {
 
-                    message.textContent =
-                        text.length > 120
-                            ? text.slice(0, 120) + '...'
-                            : text;
+            listEl.innerHTML = '';
 
-                    li.appendChild(type);
-                    li.appendChild(message);
+            const unread = list.filter(
+                alert => Number(alert.is_read) === 0
+            ).length;
 
-                    listEl.appendChild(li);
+            badge.textContent =
+                unread ? `${unread} unread` : '';
 
-                });
-
-            })
-            .catch(() => {
-
-                listEl.innerHTML = '';
+            if (list.length === 0) {
 
                 const li = document.createElement('li');
 
                 li.className = 'empty-note';
-
-                li.textContent =
-                    'Could not load alerts. Check whether the Node.js server is running.';
+                li.textContent = 'No alerts yet.';
 
                 listEl.appendChild(li);
 
+                return;
+            }
+
+            list.slice(0, 5).forEach(alert => {
+
+                const li = document.createElement('li');
+
+                const type = document.createElement('strong');
+
+                type.className = 'alert-type';
+                type.textContent = alert.alert_type || 'Alert';
+
+                const text = document.createElement('span');
+
+                const content = alert.message || '';
+
+                text.textContent =
+                    content.length > 110
+                        ? content.slice(0, 110) + '…'
+                        : content;
+
+                li.append(type, text);
+
+                listEl.appendChild(li);
             });
-    }
 
-    function refreshHome() {
+        })
+        .catch(() => {
 
-        checkStatus();
-        loadCounts();
-        loadAlerts();
+            listEl.innerHTML = `
+                <li class="empty-note">
+                    Could not load alerts. Check that the API server is running.
+                </li>
+            `;
 
-    }
-
-    function setActive(href) {
-
-        sidebarLinks.forEach(link => {
-
-            link.classList.toggle(
-                'active',
-                link.getAttribute('href') === href
-            );
-
+            badge.textContent = '';
         });
-    }
+}
 
-    function showHome() {
+function refreshHome() {
+    checkStatus();
+    loadCounts();
+    loadRevenue();
+    loadAlerts();
+}
 
-        currentHref = HOME;
+function setActive(href) {
 
-        frame.style.display = 'none';
-        frame.src = 'about:blank';
+    sidebarLinks.forEach(link => {
 
-        frameLoading.style.display = 'none';
-
-        homeView.style.display = '';
-
-        btnNewTab.style.display = 'none';
-
-        pageTitle.textContent = 'Dashboard';
-
-        setActive(HOME);
-
-        history.replaceState(null, '', HOME);
-
-        refreshHome();
-    }
-
-    function openPage(href) {
-
-        if (!href) {
-            return;
-        }
-
-        if (href === HOME) {
-            showHome();
-            return;
-        }
-
-        const match = Array.from(sidebarLinks).find(
-            link => link.getAttribute('href') === href
+        link.classList.toggle(
+            'active',
+            link.getAttribute('href') === href
         );
 
-        currentHref = href;
+    });
+}
+
+function showHome() {
+
+    currentHref = HOME;
+
+    frame.style.display = 'none';
+    frame.src = 'about:blank';
+
+    frameLoading.style.display = 'none';
+
+    homeView.style.display = '';
+
+    btnNewTab.style.display = 'none';
+
+    pageTitle.textContent = 'Dashboard';
+
+    setActive(HOME);
+
+    history.replaceState(null, '', HOME);
+
+    refreshHome();
+}
+
+function openPage(href) {
+
+    if (!href) return;
+
+    if (href === HOME) {
+        showHome();
+        return;
+    }
+
+    const match = Array.from(sidebarLinks).find(
+        link => link.getAttribute('href') === href
+    );
+
+    currentHref = href;
+
+    frameLoading.style.display = 'block';
+
+    frame.src = href;
+
+    frame.style.display = 'block';
+
+    homeView.style.display = 'none';
+
+    btnNewTab.style.display = '';
+
+    pageTitle.textContent = match
+        ? match.textContent.trim()
+        : 'Page';
+
+    setActive(href);
+
+    history.replaceState(null, '', '#' + href);
+}
+
+frame.addEventListener('load', () => {
+    frameLoading.style.display = 'none';
+});
+
+allLinks.forEach(link => {
+
+    link.addEventListener('click', event => {
+
+        event.preventDefault();
+
+        openPage(link.getAttribute('href'));
+
+    });
+
+});
+
+document.querySelectorAll(
+    '.summary-card.clickable'
+).forEach(card => {
+
+    card.addEventListener('click', () => {
+        openPage(card.dataset.href);
+    });
+
+});
+
+btnRefresh.addEventListener('click', () => {
+
+    if (currentHref === HOME) {
+        refreshHome();
+    } else {
 
         frameLoading.style.display = 'block';
 
-        frame.src = href;
-
-        frame.style.display = 'block';
-
-        homeView.style.display = 'none';
-
-        btnNewTab.style.display = '';
-
-        pageTitle.textContent = match
-            ? match.textContent.trim()
-            : 'Page';
-
-        setActive(href);
-
-        history.replaceState(null, '', '#' + href);
+        frame.src = currentHref;
     }
 
-    frame.addEventListener('load', () => {
+});
 
-        frameLoading.style.display = 'none';
+btnNewTab.addEventListener('click', () => {
 
-    });
-
-    allLinks.forEach(link => {
-
-        link.addEventListener('click', event => {
-
-            event.preventDefault();
-
-            openPage(link.getAttribute('href'));
-
-        });
-
-    });
-
-    document.querySelectorAll(
-        '.summary-card.clickable'
-    ).forEach(card => {
-
-        card.addEventListener('click', () => {
-
-            openPage(card.dataset.href);
-
-        });
-
-    });
-
-    btnRefresh.addEventListener('click', () => {
-
-        if (currentHref === HOME) {
-
-            refreshHome();
-
-        } else {
-
-            frameLoading.style.display = 'block';
-
-            frame.src = currentHref;
-
-        }
-
-    });
-
-    btnNewTab.addEventListener('click', () => {
-
-        if (currentHref) {
-            window.open(currentHref, '_blank');
-        }
-
-    });
-
-    setInterval(() => {
-
-        if (currentHref === HOME) {
-            refreshHome();
-        }
-
-    }, 30000);
-
-    refreshHome();
-
-    const saved = location.hash.slice(1);
-
-    if (saved.startsWith('/')) {
-        openPage(saved);
+    if (currentHref) {
+        window.open(currentHref, '_blank');
     }
 
+});
+
+document.getElementById('today-date').textContent =
+    new Date().toLocaleDateString('en-PH', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+setInterval(() => {
+
+    if (currentHref === HOME) {
+        refreshHome();
+    }
+
+}, 30000);
+
+refreshHome();
+
+const saved = location.hash.slice(1);
+
+if (saved.startsWith('/')) {
+    openPage(saved);
+}
 </script>
 
 </body>
